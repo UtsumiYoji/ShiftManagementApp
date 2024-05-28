@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load bootstrap5 %}
+
+<link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
+
+<wrap>
+    <div>
+        <h1>Your information</h1>
+    </div>
+    <form method="post" class="form">
+        {% csrf_token %}
+
+        {% bootstrap_form form %}
+
+        {% bootstrap_button button_type="submit" content="Save" %}
+
+        <hr>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label><br>
+            <a  href="{% url 'user:password' %}">Change password</a>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Account Deletion</label><br>
+            <a class="btn btn-outline-danger" href="{% url 'user:user-delete' %}">Delete Account</a>
+        </div>
+    </form>
+</wrap>
+
+{% endblock %}
