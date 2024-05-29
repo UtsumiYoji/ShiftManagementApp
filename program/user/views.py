@@ -51,7 +51,7 @@ class DeleteUserView(generic.DeleteView):
     
 
 class CreateAddressView(CustomPermissionMixin, generic.CreateView):
-    model = models.Addresses
+    model = models.Address
     form_class = forms.AddressForm
     template_name = 'user/address.html'
     field_not_required = 'addresses'
@@ -65,22 +65,22 @@ class CreateAddressView(CustomPermissionMixin, generic.CreateView):
     
 
 class UpdateAddressView(CustomPermissionMixin, generic.UpdateView):
-    model = models.Addresses
+    model = models.Address
     form_class = forms.AddressForm
     template_name = 'user/address.html'
-    field_required = 'addresses'
+    field_required = 'address'
     redirect_to = reverse_lazy('user:address-create')
     success_url = reverse_lazy('user:address-update')
 
     def get_object(self, queryset=None):
-        return self.request.user.addresses
+        return self.request.user.address
     
 
 class CreateEmployeeInformationView(CustomPermissionMixin, generic.CreateView):
-    model = models.EmployeeInformations
+    model = models.EmployeeInformation
     form_class = forms.EmployeeInformationForm
     template_name = 'user/employee_information.html'
-    field_not_required = 'employeeinformations'
+    field_not_required = 'employeeinformation'
     success_url = reverse_lazy('user:employee_information-update')
     redirect_to = reverse_lazy('user:employee_information-update')
 
@@ -91,7 +91,7 @@ class CreateEmployeeInformationView(CustomPermissionMixin, generic.CreateView):
     
 
 class UpdateEmployeeInformationView(CustomPermissionMixin, generic.UpdateView):
-    model = models.EmployeeInformations
+    model = models.EmployeeInformation
     form_class = forms.EmployeeInformationForm
     template_name = 'user/employee_information.html'
     field_required = 'employeeinformations'
@@ -99,5 +99,5 @@ class UpdateEmployeeInformationView(CustomPermissionMixin, generic.UpdateView):
     success_url = reverse_lazy('user:employee_information-update')
 
     def get_object(self, queryset=None):
-        return self.request.user.employeeinformations
+        return self.request.user.employeeinformation
 

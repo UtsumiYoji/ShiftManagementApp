@@ -27,13 +27,13 @@ class UserChangeForm(auth_forms.UserChangeForm):
 
 class AddressForm(forms.ModelForm):
     class Meta:
-        model = models.Addresses
+        model = models.Address
         exclude = ('user_object', )
 
 
 class EmployeeInformationForm(forms.ModelForm):
     class Meta:
-        model = models.EmployeeInformations
+        model = models.EmployeeInformation
         exclude = (
             'user_object',
             'wage',
