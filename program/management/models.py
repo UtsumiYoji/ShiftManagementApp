@@ -3,7 +3,7 @@ from user import models as user_models
 
 
 # Create your models here.
-class UserAccessAuthorizations(models.Model):
+class UserAccessAuthorization(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -12,10 +12,10 @@ class UserAccessAuthorizations(models.Model):
             )]
 
     user_object = models.ForeignKey(user_models.User, on_delete=models.CASCADE, null=False, blank=False)
-    url = models.URLField(null=False, blank=False)
+    url = models.CharField(max_length=255, null=False, blank=False)
 
 
-class EmployeeTypeAccessAuthorizations(models.Model):
+class EmployeeTypeAccessAuthorization(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -24,4 +24,4 @@ class EmployeeTypeAccessAuthorizations(models.Model):
             )]
 
     employee_type_object = models.ForeignKey(user_models.EmployeeTypes, on_delete=models.CASCADE, null=False, blank=False)
-    url = models.URLField(null=False, blank=False)
+    url = models.CharField(max_length=255, null=False, blank=False)
