@@ -21,7 +21,7 @@ class UserAccessAuthorizationsForm(forms.ModelForm):
     url = CustomURLField()
 
     class Meta:
-        model = models.UserAccessAuthorizations
+        model = models.UserAccessAuthorization
         fields = '__all__'
     
     def clean_url(self):
@@ -39,7 +39,7 @@ class EmployeeTypeAccessAuthorizationsForm(forms.ModelForm):
     url = CustomURLField()
 
     class Meta:
-        model = models.EmployeeTypeAccessAuthorizations
+        model = models.EmployeeTypeAccessAuthorization
         fields = '__all__'
 
     def clean_url(self):
@@ -55,7 +55,7 @@ class EmployeeTypeAccessAuthorizationsForm(forms.ModelForm):
 
 class EmployeeInformationForm(forms.ModelForm):
     class Meta:
-        model = user_models.EmployeeInformations
+        model = user_models.EmployeeInformation
         fields = (
             'user_object',
             'wage',

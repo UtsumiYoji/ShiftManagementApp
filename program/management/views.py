@@ -34,7 +34,7 @@ class CheckAccessAuthorization(LoginRequiredMixin):
             return super().dispatch(request, *args, **kwargs)
 
         # make sure user has employee information
-        if not hasattr(user, 'employeeinformations'):
+        if not hasattr(user, 'employeeinformation'):
             return redirect(self.redirect_to)
         
         # make sure user has type

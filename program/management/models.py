@@ -23,5 +23,5 @@ class EmployeeTypeAccessAuthorization(models.Model):
                 name="employee_type_object-url"
             )]
 
-    employee_type_object = models.ForeignKey(user_models.EmployeeTypes, on_delete=models.CASCADE, null=False, blank=False)
+    employee_type_object = models.ForeignKey(user_models.EmployeeType, on_delete=models.CASCADE, null=False, blank=False)
     url = models.CharField(max_length=255, null=False, blank=False)
