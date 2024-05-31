@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'bootstrap5',
 
     # develop apps
+    'common.apps.CommonConfig',
     'user.apps.UserConfig',
     'store.apps.StoreConfig',
     'management.apps.ManagementConfig',

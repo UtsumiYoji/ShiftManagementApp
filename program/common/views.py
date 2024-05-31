@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.views import generic
 
 # Create your views here.
 # this class is for taking over by others
@@ -28,3 +29,7 @@ class CustomPermissionMixin(LoginRequiredMixin):
 
     def has_field(self, field_name):
         return hasattr(self.request.user, field_name)
+    
+
+class TopPageView(generic.TemplateView):
+    template_name = 'common/top_page.html'
