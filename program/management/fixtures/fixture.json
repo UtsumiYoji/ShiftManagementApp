@@ -1,0 +1,10 @@
+[
+    {
+        "model": "management.restrictedpage",
+        "pk": 1,
+        "fields": {
+            "name": "User access authorization",
+            "url": "/management/access_authorization/"
+        }
+    }
+]

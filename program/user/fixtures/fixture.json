@@ -1,0 +1,75 @@
+[
+    {
+        "model": "user.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$l2tFbI2qDztbyMkdUbpQdf$5HsRSoslDJvIBid/XJRwB5c42Wj3Zdh80RseJvY2qBE=",
+            "last_login": "2024-05-31T17:46:02.339Z",
+            "is_superuser": true,
+            "is_staff": true,
+            "is_active": true,
+            "email": "admin@admin.com",
+            "phone_number": null,
+            "first_name": "Admin",
+            "last_name": "Istrator",
+            "date_joined": null,
+            "date_left": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$KEq7m5uSxoSkW9z0owJx7b$L/v2eeb2YKjyB0OVOXe5F1VxnuDDUZ081geGqnL9XP4=",
+            "last_login": "2024-05-31T17:49:57.464Z",
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true,
+            "email": "yoji.utsumi@dummy.com",
+            "phone_number": "",
+            "first_name": "Yoji",
+            "last_name": "Utsumi",
+            "date_joined": null,
+            "date_left": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "user.employeetype",
+        "pk": 1,
+        "fields": {
+            "type": "Manager"
+        }
+    },
+    {
+        "model": "user.employeetype",
+        "pk": 2,
+        "fields": {
+            "type": "Shift manager"
+        }
+    },
+    {
+        "model": "user.employeetype",
+        "pk": 3,
+        "fields": {
+            "type": "Part time"
+        }
+    },
+    {
+        "model": "user.employeetype",
+        "pk": 4,
+        "fields": {
+            "type": "Full time"
+        }
+    },
+    {
+        "model": "user.employeetype",
+        "pk": 5,
+        "fields": {
+            "type": "Trainee"
+        }
+    }
+]
