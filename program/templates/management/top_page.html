@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load bootstrap5 %}
+
+<link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
+
+<wrap>
+    <div>
+        <h1>Access</h1>
+    </div>
+    <a href="{% url 'management:user_access-create' %}">{% url 'management:user_access-create' %}</a>
+    <a href="{% url 'management:user_access' %}">{% url 'management:user_access' %}</a>
+    <a href="{% url 'management:employeetype_access-create' %}">{% url 'management:employeetype_access-create' %}</a>
+    <a href="{% url 'management:employeetype_access' %}">{% url 'management:employeetype_access' %}</a>
+</wrap>
+
+{% endblock %}

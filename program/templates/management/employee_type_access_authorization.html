@@ -10,15 +10,14 @@
 
 <wrap>
     <div>
-        <h1>Your information > Address</h1>
+        <h1>Access List</h1>
     </div>
-    <form method="post" class="form">
-        {% csrf_token %}
-
-        {% bootstrap_form form %}
-
-        {% bootstrap_button button_type="submit" content="Save" %}
-    </form>
+    {% for object in object_list  %}
+        <li>
+            <a href="">{{ object.employee_type_object.type }}</a>
+            {{ object.url }}
+        </li>
+      {% endfor %}
 </wrap>
 
 {% endblock %}

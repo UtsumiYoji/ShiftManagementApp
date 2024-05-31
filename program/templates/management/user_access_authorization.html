@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load bootstrap5 %}
+
+<link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
+
+<wrap>
+    <div>
+        <h1>Access List</h1>
+    </div>
+    {% for object in object_list  %}
+        <li>
+            <a href="">{{ object.user_object.first_name }} {{ object.user_object.last_name }}</a>
+            {{ object.url }}
+        </li>
+      {% endfor %}
+</wrap>
+
+{% endblock %}
