@@ -85,7 +85,7 @@ class ManagementTopPageView(LoginRequiredMixin, generic.TemplateView):
         type = self.request.user.employeeinformation.employee_type_object
         query = models.EmployeeTypeAccessAuthorization.objects.select_related(
             'restricted_page_object').filter(
-                user_object=user, restricted_page_object__url__contains='/management/')
+                employee_type_object=type, restricted_page_object__url__contains='/management/')
         if query:
             return super().dispatch(request, *args, **kwargs)
         
