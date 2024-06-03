@@ -14,10 +14,10 @@
     </div>
     {% for object in object_list  %}
         <li>
-            <a href="">{{ object.user_object.first_name }} {{ object.user_object.last_name }}</a>
-            {{ object.url }}
+            {{ object.user_object.first_name }} {{ object.user_object.last_name }} {{ object.restricted_page_object.url }}
+            <a href="{% url 'management:user_access-update' object.id %}">Update</a>
         </li>
-      {% endfor %}
+    {% endfor %}
 </wrap>
 
 {% endblock %}

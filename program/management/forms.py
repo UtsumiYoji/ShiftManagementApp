@@ -18,39 +18,15 @@ class CustomURLField(forms.CharField):
 
 
 class UserAccessAuthorizationsForm(forms.ModelForm):
-    url = CustomURLField()
-
     class Meta:
         model = models.UserAccessAuthorization
         fields = '__all__'
-    
-    def clean_url(self):
-        url = self.cleaned_data.get('url')
-        url = urlparse(url).path
-    
-        try:
-            resolve(url)
-            return url
-        except:
-            raise forms.ValidationError("This URL does not exist in the application.")
 
 
 class EmployeeTypeAccessAuthorizationsForm(forms.ModelForm):
-    url = CustomURLField()
-
     class Meta:
         model = models.EmployeeTypeAccessAuthorization
         fields = '__all__'
-
-    def clean_url(self):
-        url = self.cleaned_data.get('url')
-        url = urlparse(url).path
-    
-        try:
-            resolve(url)
-            return url
-        except:
-            raise forms.ValidationError("This URL does not exist in the application.")
 
 
 class EmployeeInformationForm(forms.ModelForm):

@@ -95,7 +95,7 @@ class ManagementTopPageView(LoginRequiredMixin, generic.TemplateView):
 class CreateUserAccessAuthorizationView(CheckAccessAuthorization, generic.CreateView):
     model = models.UserAccessAuthorization
     form_class = forms.UserAccessAuthorizationsForm
-    template_name = 'management/create_access_authorization.html'
+    template_name = 'management/access_authorization/create.html'
     restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:user_access')
 
@@ -103,45 +103,47 @@ class CreateUserAccessAuthorizationView(CheckAccessAuthorization, generic.Create
 class CreateEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.CreateView):
     model = models.EmployeeTypeAccessAuthorization
     form_class = forms.EmployeeTypeAccessAuthorizationsForm
-    template_name = 'management/create_access_authorization.html'
+    template_name = 'management/access_authorization/create.html'
     restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:employeetype_access')
 
 
 class ListUserAccessAuthorizationsView(generic.ListView):
     model = models.UserAccessAuthorization
-    template_name = 'management/user_access_authorization.html'
+    template_name = 'management/access_authorization/list_user.html'
 
 
 class ListEmployeeTypeAccessAuthorizationView(generic.ListView):
     model = models.EmployeeTypeAccessAuthorization
-    template_name = 'management/employee_type_access_authorization.html'
+    template_name = 'management/access_authorization/list_employee_type.html'
 
 
-class UpdateUserAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
+class UpdateUserAccessAuthorizationView(CheckAccessAuthorization, generic.UpdateView):
     model = models.UserAccessAuthorization
-    template_name = 'management/create_access_authorization.html'
+    form_class = forms.UserAccessAuthorizationsForm
+    template_name = 'management/access_authorization/create.html'
     success_url = reverse_lazy('management:user_access')
 
 
-class UpdateEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
+class UpdateEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.UpdateView):
     model = models.EmployeeTypeAccessAuthorization
-    template_name = 'management/create_access_authorization.html'
+    form_class = forms.EmployeeTypeAccessAuthorizationsForm
+    template_name = 'management/access_authorization/create.html'
     success_url = reverse_lazy('management:employeetype_access')
 
 
 class DeleteUserAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
     model = models.UserAccessAuthorization
-    template_name = 'management/create_access_authorization.html'
+    template_name = 'management/access_authorization/delete.html'
     success_url = reverse_lazy('management:user_access')
 
 
 class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
     model = models.EmployeeTypeAccessAuthorization
-    template_name = 'management/create_access_authorization.html'
+    template_name = 'management/access_authorization/delete.html'
     success_url = reverse_lazy('management:employeetype_access')
 
 
-class ListEmployeeInformationView(generic.ListView):
-    model = user_models.EmployeeInformation
-    template_name = 'management/employee_type_access_authorization.html'
+class ListUserView(generic.ListView):
+    model = user_models.User
+    template_name = 'management/list_user.html'

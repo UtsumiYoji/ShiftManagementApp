@@ -16,10 +16,11 @@
         {% csrf_token %}
 
         <div class="alert alert-danger" role="alert">
-            Are you sure want to delete your account?
+            We are going to delete this data. Is it OK?
         </div>
-        <div class="alert alert-warning" role="alert">
-            If you are creater and posted calculator, them will also be deleted.
+
+        <div class="mb-3">
+            {{ object }}
         </div>
 
         <div class="mb-3">
