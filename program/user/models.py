@@ -100,7 +100,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField("first name", max_length=150, blank=False, null=False)
     last_name = models.CharField("last name", max_length=150, blank=False, null=False)
 
-    date_joined = models.DateTimeField("date joined", null=True, blank=True)
+    date_joined = models.DateTimeField("date joined", null=True, blank=True, default=timezone.now)
     date_left = models.DateTimeField("date left", null=True, blank=True)
 
     objects = UserManager()

@@ -8,10 +8,8 @@ from user import models as user_models
 
 
 class CheckAccessAuthorization(LoginRequiredMixin):
-    field_required = None
-    field_not_required = None
     redirect_to = reverse_lazy('management:top_page')
-    restricted_page_url = None
+    restricted_page_url = '/management/'
 
     def dispatch(self, request, *args, **kwargs):
         # make sure user already logined or not
@@ -51,45 +49,9 @@ class CheckAccessAuthorization(LoginRequiredMixin):
         return redirect(self.redirect_to)
 
 
-class ManagementTopPageView(LoginRequiredMixin, generic.TemplateView):
+class ManagementTopPageView(CheckAccessAuthorization, generic.TemplateView):
     template_name = 'management/top_page.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        # make sure user already logined or not
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        # get user
-        user = self.request.user
-
-        # if user is staff, it can access
-        if user.is_staff:
-            return super().dispatch(request, *args, **kwargs)
-
-        # make sure user has authorization
-        query = models.UserAccessAuthorization.objects.select_related(
-            'restricted_page_object').filter(
-                user_object=user, restricted_page_object__url__contains='/management/')
-        if query:
-            return super().dispatch(request, *args, **kwargs)
-
-        # make sure user has employee information
-        if not hasattr(user, 'employeeinformation'):
-            return redirect(reverse_lazy('common:top_page'))
-        
-        # make sure user has type
-        if not user.employeeinformation.employee_type_object:
-            return redirect(reverse_lazy('common:top_page'))
-
-        # make type of user has authorization
-        type = self.request.user.employeeinformation.employee_type_object
-        query = models.EmployeeTypeAccessAuthorization.objects.select_related(
-            'restricted_page_object').filter(
-                employee_type_object=type, restricted_page_object__url__contains='/management/')
-        if query:
-            return super().dispatch(request, *args, **kwargs)
-        
-        return redirect(reverse_lazy('common:top_page'))
+    restricted_page_url = reverse_lazy('common:top_page')
 
 
 class CreateUserAccessAuthorizationView(CheckAccessAuthorization, generic.CreateView):
@@ -108,20 +70,23 @@ class CreateEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generi
     success_url = reverse_lazy('management:employeetype_access')
 
 
-class ListUserAccessAuthorizationsView(generic.ListView):
+class ListUserAccessAuthorizationsView(CheckAccessAuthorization, generic.ListView):
     model = models.UserAccessAuthorization
     template_name = 'management/access_authorization/list_user.html'
+    restricted_page_url = '/management/access_authorization/'
 
 
-class ListEmployeeTypeAccessAuthorizationView(generic.ListView):
+class ListEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.ListView):
     model = models.EmployeeTypeAccessAuthorization
     template_name = 'management/access_authorization/list_employee_type.html'
+    restricted_page_url = '/management/access_authorization/'
 
 
 class UpdateUserAccessAuthorizationView(CheckAccessAuthorization, generic.UpdateView):
     model = models.UserAccessAuthorization
     form_class = forms.UserAccessAuthorizationsForm
     template_name = 'management/access_authorization/create.html'
+    restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:user_access')
 
 
@@ -129,18 +94,21 @@ class UpdateEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generi
     model = models.EmployeeTypeAccessAuthorization
     form_class = forms.EmployeeTypeAccessAuthorizationsForm
     template_name = 'management/access_authorization/create.html'
+    restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:employeetype_access')
 
 
 class DeleteUserAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
     model = models.UserAccessAuthorization
     template_name = 'management/access_authorization/delete.html'
+    restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:user_access')
 
 
 class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
     model = models.EmployeeTypeAccessAuthorization
     template_name = 'management/access_authorization/delete.html'
+    restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:employeetype_access')
 
 
