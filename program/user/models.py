@@ -148,11 +148,7 @@ class EmployeeType(models.Model):
         return self.type
 
 
-class EmployeeInformation(models.Model):
-    WAGE_BASE_CHOICES = [
-        (0, 'hour'), (1, 'month'), (2, 'year')
-    ]
-
+class BankInformation(models.Model):
     def only_int(value): 
         if value.isdigit()==False:
             raise ValidationError('Only number is allowed')
@@ -161,6 +157,18 @@ class EmployeeInformation(models.Model):
     institution_number = models.CharField('institution number', max_length=3, blank=False, null=False, validators=[only_int])
     transit_number = models.CharField('transit number', max_length=5, blank=False, null=False, validators=[only_int])
     account_number = models.CharField('account number', max_length=7, blank=False, null=False, validators=[only_int])
+
+
+class EmployeeInformation(models.Model):
+    WAGE_BASE_CHOICES = [
+        (0, 'hour'), (1, 'month'), (2, 'year')
+    ]
+
+    def only_int(value): 
+        if value.isdigit()==False:
+            raise ValidationError('Only number is allowed')
+    
+    user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
     sin_number = models.CharField('sin number', max_length=9, blank=False, null=False, validators=[only_int])
     wage = models.FloatField('wage', null=True, blank=True)
     wage_is_based_on = models.IntegerField(choices=WAGE_BASE_CHOICES, null=True, blank=True)

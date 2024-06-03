@@ -15,6 +15,6 @@ urlpatterns = [
     path('address/create/', views.CreateAddressView.as_view(), name='address-create'),
     path('address/', views.UpdateAddressView.as_view(), name='address-update'),
 
-    path('employee_information/create/', views.CreateEmployeeInformationView.as_view(), name='employee_information-create'),
-    path('employee_information/', views.UpdateEmployeeInformationView.as_view(), name='employee_information-update'),
+    path('bank_information/create/', views.CreateBankInformationView.as_view(), name='employee_information-create'),
+    path('bank_information/', views.UpdateBankInformationView.as_view(), name='employee_information-update'),
 ]

@@ -31,12 +31,7 @@ class AddressForm(forms.ModelForm):
         exclude = ('user_object', )
 
 
-class EmployeeInformationForm(forms.ModelForm):
+class BankInformationForm(forms.ModelForm):
     class Meta:
         model = models.EmployeeInformation
-        exclude = (
-            'user_object',
-            'wage',
-            'wage_is_based_on',
-            'employee_type_object'
-            )
+        exclude = ('user_object', )

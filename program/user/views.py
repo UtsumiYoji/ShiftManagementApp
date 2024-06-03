@@ -76,13 +76,13 @@ class UpdateAddressView(CustomPermissionMixin, generic.UpdateView):
         return self.request.user.address
     
 
-class CreateEmployeeInformationView(CustomPermissionMixin, generic.CreateView):
-    model = models.EmployeeInformation
-    form_class = forms.EmployeeInformationForm
-    template_name = 'user/employee_information.html'
-    field_not_required = 'employeeinformation'
-    success_url = reverse_lazy('user:employee_information-update')
-    redirect_to = reverse_lazy('user:employee_information-update')
+class CreateBankInformationView(CustomPermissionMixin, generic.CreateView):
+    model = models.BankInformation
+    form_class = forms.BankInformationForm
+    template_name = 'user/bank_information.html'
+    field_not_required = 'bankinformation'
+    success_url = reverse_lazy('user:bank_information-update')
+    redirect_to = reverse_lazy('user:bank_information-update')
 
     # add user_object to instance before saving
     def form_valid(self, form):
@@ -90,14 +90,14 @@ class CreateEmployeeInformationView(CustomPermissionMixin, generic.CreateView):
         return super().form_valid(form)
     
 
-class UpdateEmployeeInformationView(CustomPermissionMixin, generic.UpdateView):
-    model = models.EmployeeInformation
-    form_class = forms.EmployeeInformationForm
-    template_name = 'user/employee_information.html'
-    field_required = 'employeeinformations'
-    redirect_to = reverse_lazy('user:employee_information-create')
-    success_url = reverse_lazy('user:employee_information-update')
+class UpdateBankInformationView(CustomPermissionMixin, generic.UpdateView):
+    model = models.BankInformation
+    form_class = forms.BankInformationForm
+    template_name = 'user/bank_information.html'
+    field_required = 'bankinformations'
+    redirect_to = reverse_lazy('user:bank_information-create')
+    success_url = reverse_lazy('user:bank_information-update')
 
     def get_object(self, queryset=None):
-        return self.request.user.employeeinformation
+        return self.request.user.bankinformation
 
