@@ -1,9 +1,12 @@
 from django.views import generic
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.http import HttpResponse
+from django.template import loader
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . import models, forms
+from common.shortcuts import get_object_or_none, get_list_or_none
 from user import models as user_models
 
 
@@ -114,4 +117,58 @@ class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generi
 
 class ListUserView(generic.ListView):
     model = user_models.User
-    template_name = 'management/list_user.html'
+    template_name = 'management/list.html'
+
+
+class CreateUpdateEmployeeInformationView(generic.View):
+    template_name = ''
+    restricted_page_url = '/management/user_information/'
+    success_url = reverse_lazy('management:top_page')
+
+    def get(self, request, *args, **kwargs):
+        objects = dict()
+
+        # Get user information
+        user = get_object_or_none(user_models.User, pk=kwargs['pk'])
+        objects['user'] = user
+        objects['address'] = get_object_or_none(user_models.Address, user_object=user)
+        objects['bank'] = get_object_or_none(user_models.BankInformation, user_object=user)
+        objects['images'] = get_list_or_none(user_models.Image, user_object=user)
+        objects['notes'] = get_list_or_none(user_models.Note, user_object=user)
+
+        # Make forms
+        if hasattr(user, 'employeeinformation'):
+            objects['employee_form'] = forms.EmployeeInformationForm(instance=user.employeeinformation)
+        else: 
+            objects['employee_form'] = forms.EmployeeInformationForm()
+
+        return self.render_to_response(objects)
+
+    def post(self, request, *args, **kwargs):
+        objects = dict()
+
+        # Get user information
+        user = get_object_or_none(user_models.User, pk=kwargs['pk'])
+        objects['user'] = user
+        objects['address'] = get_object_or_none(user_models.Address, user_object=user)
+        objects['bank'] = get_object_or_none(user_models.BankInformation, user_object=user)
+        objects['images'] = get_list_or_none(user_models.Image, user_object=user)
+        objects['notes'] = get_list_or_none(user_models.Note, user_object=user)
+
+        # Make forms
+        if hasattr(user, 'employeeinformation'):
+            objects['employee_form'] = forms.EmployeeInformationForm(request.POST, instance=user.employeeinformation)
+        else: 
+            objects['employee_form'] = forms.EmployeeInformationForm(request.POST)
+
+        if objects['employee_form'].is_valid():
+            objects['employee_form'].instance.user_object = user
+            objects['employee_form'].save()
+            return redirect(self.success_url)
+
+        return self.render_to_response(objects)
+
+    def render_to_response(self, context):
+        template = loader.get_template(self.template_name)
+        return HttpResponse(template.render(context))
+

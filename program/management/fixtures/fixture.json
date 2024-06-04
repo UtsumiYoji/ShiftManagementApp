@@ -6,5 +6,13 @@
             "name": "User access authorization",
             "url": "/management/access_authorization/"
         }
+    },
+    {
+        "model": "management.restrictedpage",
+        "pk": 2,
+        "fields": {
+            "name": "User information",
+            "url": "/management/user_information/"
+        }
     }
 ]
