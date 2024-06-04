@@ -172,4 +172,20 @@ class CreateUpdateEmployeeInformationView(CheckAccessAuthorization, generic.View
     def render_to_response(self, context):
         template = loader.get_template(self.template_name)
         return HttpResponse(template.render(context))
+    
+
+class CreateImageView(CheckAccessAuthorization, generic.CreateView):
+    model = user_models.Image
+    form_class = forms.ImageForm
+    template_name = ''
+    restricted_page_url = '/management/user_information/'
+    success_url = reverse_lazy('management:user_information')
+
+
+class CreateNoteView(CheckAccessAuthorization, generic.CreateView):
+    model = user_models.Note
+    form_class = forms.NoteForm
+    template_name = ''
+    restricted_page_url = '/management/user_information/'
+    success_url = reverse_lazy('management:user_information')
 
