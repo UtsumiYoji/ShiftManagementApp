@@ -115,12 +115,13 @@ class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generi
     success_url = reverse_lazy('management:employeetype_access')
 
 
-class ListUserView(generic.ListView):
+class ListUserView(CheckAccessAuthorization, generic.ListView):
     model = user_models.User
+    restricted_page_url = '/management/user_information/'
     template_name = 'management/list.html'
 
 
-class CreateUpdateEmployeeInformationView(generic.View):
+class CreateUpdateEmployeeInformationView(CheckAccessAuthorization, generic.View):
     template_name = ''
     restricted_page_url = '/management/user_information/'
     success_url = reverse_lazy('management:top_page')
