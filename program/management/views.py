@@ -188,4 +188,3 @@ class CreateNoteView(CheckAccessAuthorization, generic.CreateView):
     template_name = ''
     restricted_page_url = '/management/user_information/'
     success_url = reverse_lazy('management:user_information')
-
