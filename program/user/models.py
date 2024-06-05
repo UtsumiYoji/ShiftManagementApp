@@ -169,7 +169,7 @@ class EmployeeInformation(models.Model):
             raise ValidationError('Only number is allowed')
     
     user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
-    sin_number = models.CharField('sin number', max_length=9, blank=False, null=False, validators=[only_int])
+    sin_number = models.CharField('sin number', max_length=9, blank=True, null=True, validators=[only_int])
     wage = models.FloatField('wage', null=True, blank=True)
     wage_is_based_on = models.IntegerField(choices=WAGE_BASE_CHOICES, null=True, blank=True)
     employee_type_object = models.ForeignKey(EmployeeType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -187,10 +187,10 @@ class Note(models.Model):
     note = models.TextField(null=False, blank=False)
 
 
-class ChangeLog(models.Model):
+class Log(models.Model):
     user_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='user_changelogs_user')
     editor_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='user_changelogs_editor')
     field = models.CharField('field', max_length=255, blank=False, null=False)
-    before = models.CharField('before', max_length=255, blank=False, null=False)
+    before = models.CharField('before', max_length=255, blank=True, null=True)
     after = models.CharField('after', max_length=255, blank=False, null=False)
     timestamp = models.DateTimeField('timestamp', default=timezone.now)
