@@ -9,6 +9,11 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
+def only_int(value): 
+        if value.isdigit()==False:
+            raise ValidationError('Only number is allowed')
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -141,6 +146,18 @@ class Address(models.Model):
     province = models.CharField('province', max_length=255, null=False, blank=False)
 
 
+class BankInformation(models.Model):
+    user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
+    institution_number = models.CharField('institution number', max_length=3, blank=False, null=False, validators=[only_int])
+    transit_number = models.CharField('transit number', max_length=5, blank=False, null=False, validators=[only_int])
+    account_number = models.CharField('account number', max_length=7, blank=False, null=False, validators=[only_int])
+
+
+class PersonalInformation(models.Model):
+    user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
+    sin_number = models.CharField('sin number', max_length=9, blank=True, null=True, validators=[only_int])
+
+
 class EmployeeType(models.Model):
     type = models.CharField(max_length=255, null=False, blank=False, unique=True)
 
@@ -148,30 +165,15 @@ class EmployeeType(models.Model):
         return self.type
 
 
-class BankInformation(models.Model):
-    def only_int(value): 
-        if value.isdigit()==False:
-            raise ValidationError('Only number is allowed')
-
-    user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
-    institution_number = models.CharField('institution number', max_length=3, blank=False, null=False, validators=[only_int])
-    transit_number = models.CharField('transit number', max_length=5, blank=False, null=False, validators=[only_int])
-    account_number = models.CharField('account number', max_length=7, blank=False, null=False, validators=[only_int])
-
-
 class EmployeeInformation(models.Model):
     WAGE_BASE_CHOICES = [
         (0, 'hour'), (1, 'month'), (2, 'year')
     ]
-
-    def only_int(value): 
-        if value.isdigit()==False:
-            raise ValidationError('Only number is allowed')
     
     user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
-    sin_number = models.CharField('sin number', max_length=9, blank=True, null=True, validators=[only_int])
     wage = models.FloatField('wage', null=True, blank=True)
     wage_is_based_on = models.IntegerField(choices=WAGE_BASE_CHOICES, null=True, blank=True)
+    limit_work_hour = models.PositiveIntegerField('can work until', null=True, blank=True)
     employee_type_object = models.ForeignKey(EmployeeType, on_delete=models.SET_NULL, null=True, blank=True)
 
 
