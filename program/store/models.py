@@ -1,9 +1,9 @@
 from django.db import models
 from user.models import User
-from django.utils import timezone
+
 
 # Create your models here.
-class Stores(models.Model):
+class Store(models.Model):
     name = models.CharField(max_length=255, blank=False, null=False)
     place_name = models.CharField(max_length=255, blank=True, null=True, help_text='If your store is inside of mall or something')
     address1 = models.CharField('adress1', help_text='Street name', max_length=255, null=True, blank=True)
@@ -13,7 +13,7 @@ class Stores(models.Model):
     province = models.CharField('province', max_length=255, null=True, blank=True)
 
 
-class BusinessHours(models.Model):
+class BusinessHour(models.Model):
     class Meta:
         unique_together = (('store_object', 'day'),)
 
@@ -27,33 +27,24 @@ class BusinessHours(models.Model):
         (6, 'Saturday'),
     ]
 
-    store_object = models.ForeignKey(Stores, on_delete=models.CASCADE, null=False, blank=False)
+    store_object = models.ForeignKey(Store, on_delete=models.CASCADE, null=False, blank=False)
     day = models.IntegerField(choices=DAY_CHOICES, null=False, blank=False)
     start_at = models.TimeField(null=True, blank=True)
     finish_at = models.TimeField(null=True, blank=True)
 
 
-class ChangeLog(models.Model):
-    store_object = models.ForeignKey(Stores, on_delete=models.CASCADE, null=False, blank=False)
-    editor_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
-    field = models.CharField('field', max_length=255, blank=False, null=False)
-    before = models.CharField('before', max_length=255, blank=False, null=False)
-    after = models.CharField('after', max_length=255, blank=False, null=False)
-    timestamp = models.DateTimeField('timestamp', default=timezone.now)
-
-
-class Employees(models.Model):
+class Employee(models.Model):
     class Meta:
         unique_together = (('store_object', 'user_object'),)
 
-    store_object = models.ForeignKey(Stores, on_delete=models.CASCADE, null=False, blank=False)
+    store_object = models.ForeignKey(Store, on_delete=models.CASCADE, null=False, blank=False)
     user_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
 
 
-class ShiftManagers(models.Model):
+class Manager(models.Model):
     class Meta:
         unique_together = (('store_object', 'user_object'),)
     
-    store_object = models.ForeignKey(Stores, on_delete=models.CASCADE, null=False, blank=False)
+    store_object = models.ForeignKey(Store, on_delete=models.CASCADE, null=False, blank=False)
     user_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     
