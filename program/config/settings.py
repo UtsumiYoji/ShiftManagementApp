@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # libs
     'bootstrap5',
+    'extra_views',
 
     # develop apps
     'common.apps.CommonConfig',
