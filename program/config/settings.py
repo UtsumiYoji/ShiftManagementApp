@@ -45,11 +45,12 @@ INSTALLED_APPS = [
     # libs
     'django_bootstrap5',
     'extra_views',
+    'colorfield',
 
     # develop apps
     'common.apps.CommonConfig',
     'user.apps.UserConfig',
-    'store.apps.StoreConfig',
+    'work_location.apps.WorkLocationConfig',
     'management.apps.ManagementConfig',
 ]
 
