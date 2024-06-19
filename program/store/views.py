@@ -1,9 +1,9 @@
-from django.db.models.query import QuerySet
 from django.views import generic
 from django.urls import reverse_lazy
 from extra_views import ModelFormSetView
 
 from . import models, forms
+
 
 # Create your views here.
 class CreateStoreView(generic.CreateView):
@@ -51,7 +51,7 @@ class DeleteStoreView(generic.DeleteView):
         return context
 
 
-class CreateBusinnessHourView(ModelFormSetView):
+class BusinnessHourView(ModelFormSetView):
     model = models.BusinessHour
     form_class = forms.BusinessHourForm
     factory_kwargs = {'extra': 6, 'max_num': 7}
@@ -63,6 +63,14 @@ class CreateBusinnessHourView(ModelFormSetView):
     template_name = ''
     success_url = reverse_lazy('')
 
+    def get_queryset(self):
+        querys = models.BusinessHour.objects.filter(store_object=self.kwargs['pk'])
+        if querys.exists():
+            self.queryset = querys.values()
+            del self.initial
+        
+        return super().get_queryset()
+
     def formset_valid(self, formset):
         store_object = models.Store.objects.get(pk=self.kwargs['pk'])
         for form in formset:
@@ -70,12 +78,24 @@ class CreateBusinnessHourView(ModelFormSetView):
         return super().formset_valid(formset)
 
 
-class UpdateBusinessHourView(ModelFormSetView):
-    model = models.BusinessHour
-    form_class = forms.BusinessHourForm
-    queryset = models.BusinessHour.objects.none()
+class CreateEmployeeView(generic.CreateView):
+    model = models.Employee
+    form_class = forms.EmployeeForm
     template_name = ''
     success_url = reverse_lazy('')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Employee'
+        return context
 
-    def get_queryset(self) -> QuerySet[models.BusinessHour]:
-        return models.BusinessHour.objects.filter(store_object=self.kwargs['pk'])
+
+class DeleteEmployeeView(generic.DeleteView):
+    model = models.Employee
+    template_name = ''
+    success_url = reverse_lazy('')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Delete Employee'
+        return context
