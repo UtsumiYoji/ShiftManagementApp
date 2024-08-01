@@ -4,3 +4,6 @@ env
 
 */migrations/
 */__pycache__/
+
+static/admin
+static/colorfield

@@ -3,8 +3,8 @@
         "model": "user.user",
         "pk": 1,
         "fields": {
-            "password": "pbkdf2_sha256$600000$l2tFbI2qDztbyMkdUbpQdf$5HsRSoslDJvIBid/XJRwB5c42Wj3Zdh80RseJvY2qBE=",
-            "last_login": "2024-05-31T17:46:02.339Z",
+            "password": "pbkdf2_sha256$720000$iFgwMW8Tn4zKx0lfHlFpb8$hVsBxNiZzXaxyAX4m0Woe3ir6CbbfaFEwL9ZTP1zARg=",
+            "last_login": "2024-08-01T18:41:01.536Z",
             "is_superuser": true,
             "is_staff": true,
             "is_active": true,
@@ -32,6 +32,63 @@
             "first_name": "Yoji",
             "last_name": "Utsumi",
             "date_joined": null,
+            "date_left": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$p49y0YG1Gsmr0J1Dbv1Ybd$mRqqV1xAfKIUwaoK1cZquhEFWk6BFTBZ3Vm8yxsrq9I=",
+            "last_login": null,
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true,
+            "email": "user1@test.com",
+            "phone_number": null,
+            "first_name": "User1",
+            "last_name": "Test",
+            "date_joined": "2024-08-01T18:38:58.332Z",
+            "date_left": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 4,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$P2bHVncK6HW9pGNIzcxoyL$WC4FlCY40KxIchxpy9mU8CDeWJGXOWpPKQUwEzO9BT4=",
+            "last_login": null,
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true,
+            "email": "user2@test.com",
+            "phone_number": null,
+            "first_name": "User2",
+            "last_name": "Test",
+            "date_joined": "2024-08-01T18:40:17.027Z",
+            "date_left": null,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "user.user",
+        "pk": 5,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$BjxYOdAnNSd3cETNzGIR3z$RHHe9acSTMIAUYPlKVpwypT1BATHMkLSTy6lKnOgUB0=",
+            "last_login": null,
+            "is_superuser": false,
+            "is_staff": false,
+            "is_active": true,
+            "email": "user3@test.com",
+            "phone_number": null,
+            "first_name": "User3",
+            "last_name": "Test",
+            "date_joined": "2024-08-01T18:43:08.920Z",
             "date_left": null,
             "groups": [],
             "user_permissions": []
