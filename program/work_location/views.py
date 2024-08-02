@@ -1,6 +1,6 @@
 from django.views import generic
 from django.urls import reverse_lazy
-from extra_views import ModelFormSetView
+from django.forms import modelformset_factory
 
 from . import models, forms
 
@@ -12,10 +12,52 @@ class CreateWorkLocationView(generic.CreateView):
     template_name = ''
     success_url = reverse_lazy('')
     
+    def make_formset(self, request_post_data=None):
+        if request_post_data is None:
+            result = modelformset_factory(
+                model=models.BusinessHour,
+                form=forms.BusinessHourForm,
+                max_num=7,
+            )(
+                initial=[
+                {'day': 0}, {'day': 1}, {'day': 2}, {'day': 3},
+                {'day': 4}, {'day': 5}, {'day': 6}, 
+                ]
+            )
+        else:
+            result = modelformset_factory(
+                model=models.BusinessHour,
+                form=forms.BusinessHourForm,
+                max_num=7
+            )(
+                request_post_data
+                )
+
+        return result
+
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Create work location'
-        return context
+        result = super().get_context_data(**kwargs)
+        result['title'] = 'Create work location'
+
+        if 'formset' not in kwargs:
+            kwargs['formset'] = self.make_formset()
+
+        return result
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        formset = self.make_formset(request.POST)
+
+        if (form.is_valid() and formset.is_valid()):
+            work_location = form.save()
+            for form in formset:
+                form.instance.work_location_object = work_location
+            formset.save()
+
+            return self.form_valid(form)
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form, formset=formset))
 
 
 class ListWorkLocationView(generic.ListView):
@@ -26,18 +68,58 @@ class ListWorkLocationView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Work location List'
         return context
-    
+
 
 class UpdateWorkLocationView(generic.UpdateView):
     model = models.WorkLocation
     form_class = forms.WorkLocationForm
     template_name = ''
     success_url = reverse_lazy('')
+
+    def make_formset(self, request_post_data=None):
+        if request_post_data is None:
+            result = modelformset_factory(
+                model=models.BusinessHour,
+                form=forms.BusinessHourForm,
+                max_num=7,
+            )(
+                queryset=models.BusinessHour.objects.filter(
+                    work_location_object=self.object)
+            )
+        else:
+            result = modelformset_factory(
+                model=models.BusinessHour,
+                form=forms.BusinessHourForm,
+                max_num=7
+            )(
+                request_post_data
+                )
+
+        return result
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Update work location'
+
+        if 'formset' not in kwargs:
+            kwargs['formset'] = self.make_formset()
+
         return context
+
+    def post(self, request, *args: str, **kwargs):
+        form = self.get_form()
+        formset = self.make_formset(request.POST)
+
+        if (form.is_valid() and formset.is_valid()):
+            work_location = form.save()
+            for form in formset:
+                form.instance.work_location_object = work_location
+            formset.save()
+
+            return self.form_valid(form)
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form, formset=formset))
     
 
 class DeleteWorkLocationView(generic.DeleteView):
@@ -49,30 +131,3 @@ class DeleteWorkLocationView(generic.DeleteView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Delete work location'
         return context
-
-
-class BusinnessHourView(ModelFormSetView):
-    model = models.BusinessHour
-    form_class = forms.BusinessHourForm
-    factory_kwargs = {'extra': 6, 'max_num': 7}
-    initial = [
-                {'day': 0}, {'day': 1}, {'day': 2}, {'day': 3},
-                {'day': 4}, {'day': 5}, {'day': 6}, 
-            ]
-    queryset = models.BusinessHour.objects.none()
-    template_name = ''
-    success_url = reverse_lazy('')
-
-    def get_queryset(self):
-        querys = models.BusinessHour.objects.filter(work_location_object=self.kwargs['pk'])
-        if querys.exists():
-            self.queryset = querys.values()
-            del self.initial
-        
-        return super().get_queryset()
-
-    def formset_valid(self, formset):
-        work_location_object = models.WorkLocation.objects.get(pk=self.kwargs['pk'])
-        for form in formset:
-            form.instance.work_location_object = work_location_object
-        return super().formset_valid(formset)
