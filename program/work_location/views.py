@@ -9,7 +9,7 @@ from . import models, forms
 class CreateWorkLocationView(generic.CreateView):
     model = models.WorkLocation
     form_class = forms.WorkLocationForm
-    template_name = ''
+    template_name = 'work_location/create.html'
     success_url = reverse_lazy('')
     
     def make_formset(self, request_post_data=None):
@@ -17,6 +17,7 @@ class CreateWorkLocationView(generic.CreateView):
             result = modelformset_factory(
                 model=models.BusinessHour,
                 form=forms.BusinessHourForm,
+                extra=7,
                 max_num=7,
             )(
                 initial=[
@@ -28,6 +29,7 @@ class CreateWorkLocationView(generic.CreateView):
             result = modelformset_factory(
                 model=models.BusinessHour,
                 form=forms.BusinessHourForm,
+                extra=7,
                 max_num=7
             )(
                 request_post_data
@@ -40,7 +42,7 @@ class CreateWorkLocationView(generic.CreateView):
         result['title'] = 'Create work location'
 
         if 'formset' not in kwargs:
-            kwargs['formset'] = self.make_formset()
+            result['formset'] = self.make_formset()
 
         return result
 

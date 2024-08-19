@@ -17,4 +17,4 @@ python ./manage.py makemigrations shift
 python ./manage.py migrate
 python ./manage.py makemigrations
 python ./manage.py loaddata fixture.json
-python ./manage.py collectstatic
+@REM python ./manage.py collectstatic

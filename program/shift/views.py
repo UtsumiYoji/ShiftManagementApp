@@ -31,6 +31,7 @@ class CreateWorkLocationView(edit.BaseFormView):
     def get_context_data(self, **kwargs):
         result = super().get_context_data(**kwargs)
         result['title'] = 'Create Work Location'
+        result['work_places'] = models.WorkLocation.objects.all()
 
         if 'formset' not in kwargs:
             kwargs['formset'] = self.make_formset(

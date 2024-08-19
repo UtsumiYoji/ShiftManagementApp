@@ -5,8 +5,8 @@ from . import views
 app_name = 'user'
 urlpatterns = [
     path('sign-up/', views.CreateUserView.as_view(), name='sign-up'),
-    path('login/', views.LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('login/', views.LoginView.as_view(), name='log-in'),
+    path('logout/', LogoutView.as_view(), name='log-out'),
 
     path('', views.UpdateUserView.as_view(), name='user-update'),
     path('password/', views.PasswordChangeView.as_view(), name='password'),

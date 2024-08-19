@@ -1,7 +1,6 @@
 from django.db import models
 from colorfield.fields import ColorField
 
-from user.models import User
 
 # Create your models here.
 class WorkLocation(models.Model):

@@ -27,7 +27,7 @@ env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # libs
     'django_bootstrap5',
     'colorfield',
+    'widget_tweaks',
 
     # develop apps
     'common.apps.CommonConfig',
@@ -131,7 +132,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] 
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -144,6 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.User'
 
 # login / logout
-LOGIN_URL = "user:login"
+LOGIN_URL = "user:log-in"
 LOGIN_REDIRECT_URL = "user:user-update"
-LOGOUT_REDIRECT_URL = "user:login"
+LOGOUT_REDIRECT_URL = "user:log-in"
