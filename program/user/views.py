@@ -50,54 +50,29 @@ class DeleteUserView(generic.DeleteView):
         return self.request.user
     
 
-class CreateAddressView(CustomPermissionMixin, generic.CreateView):
+class AddressView(CustomPermissionMixin, generic.UpdateView):
     model = models.Address
     form_class = forms.AddressForm
     template_name = 'user/address.html'
-    field_not_required = 'addresses'
     success_url = reverse_lazy('user:address-update')
-    redirect_to = reverse_lazy('user:address-update')
 
-    # add user_object to instance before saving
+    def get_object(self, queryset=None):
+        return getattr(self.request.user, 'addresses', None)
+
     def form_valid(self, form):
         form.instance.user_object = self.request.user
         return super().form_valid(form)
     
 
-class UpdateAddressView(CustomPermissionMixin, generic.UpdateView):
-    model = models.Address
-    form_class = forms.AddressForm
-    template_name = 'user/address.html'
-    field_required = 'address'
-    redirect_to = reverse_lazy('user:address-create')
-    success_url = reverse_lazy('user:address-update')
-
-    def get_object(self, queryset=None):
-        return self.request.user.address
-    
-
-class CreateBankInformationView(CustomPermissionMixin, generic.CreateView):
+class BankInformationView(CustomPermissionMixin, generic.UpdateView):
     model = models.BankInformation
     form_class = forms.BankInformationForm
     template_name = 'user/bank_information.html'
-    field_not_required = 'bankinformation'
     success_url = reverse_lazy('user:bank_information-update')
-    redirect_to = reverse_lazy('user:bank_information-update')
 
-    # add user_object to instance before saving
+    def get_object(self, queryset=None):
+        return getattr(self.request.user, 'bankinformation', None)
+    
     def form_valid(self, form):
         form.instance.user_object = self.request.user
         return super().form_valid(form)
-    
-
-class UpdateBankInformationView(CustomPermissionMixin, generic.UpdateView):
-    model = models.BankInformation
-    form_class = forms.BankInformationForm
-    template_name = 'user/bank_information.html'
-    field_required = 'bankinformations'
-    redirect_to = reverse_lazy('user:bank_information-create')
-    success_url = reverse_lazy('user:bank_information-update')
-
-    def get_object(self, queryset=None):
-        return self.request.user.bankinformation
-

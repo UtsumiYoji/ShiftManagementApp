@@ -151,10 +151,6 @@ class BankInformation(models.Model):
     institution_number = models.CharField('institution number', max_length=3, blank=False, null=False, validators=[only_int])
     transit_number = models.CharField('transit number', max_length=5, blank=False, null=False, validators=[only_int])
     account_number = models.CharField('account number', max_length=7, blank=False, null=False, validators=[only_int])
-
-
-class PersonalInformation(models.Model):
-    user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
     sin_number = models.CharField('sin number', max_length=9, blank=True, null=True, validators=[only_int])
 
 

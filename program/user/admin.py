@@ -5,7 +5,6 @@ from . import models
 admin.site.register(models.User)
 admin.site.register(models.Address)
 admin.site.register(models.BankInformation)
-admin.site.register(models.PersonalInformation)
 admin.site.register(models.EmployeeType)
 admin.site.register(models.EmployeeInformation)
 admin.site.register(models.Image)

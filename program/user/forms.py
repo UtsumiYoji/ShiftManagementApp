@@ -35,9 +35,3 @@ class BankInformationForm(forms.ModelForm):
     class Meta:
         model = models.BankInformation
         exclude = ('user_object', )
-
-
-class PersonalInformationForm(forms.ModelForm):
-    class Meta:
-        model = models.PersonalInformation
-        exclude = ('user_object', )
