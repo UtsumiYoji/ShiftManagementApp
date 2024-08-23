@@ -1,0 +1,35 @@
+body {
+    overflow-y: scroll;
+}
+
+header{
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+
+    background-color: white;
+
+    .dropdown {
+        a {
+            height: 32px;
+        }
+    }
+
+    .dropdown form {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        input {
+            width: 100%;
+        }
+    }
+}
+
+main {
+    margin-top: 72px;
+}

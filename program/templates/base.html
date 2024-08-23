@@ -12,33 +12,64 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     {% bootstrap_css %}
-    <script src="{% static 'base.js' %}"></script>
-    <link rel="stylesheet" type='text/css' href="{% static 'base.css'%}">
-    
-    <title>{% block title %}Calc{% endblock title %}</title>
+    <link rel="stylesheet" type='text/css' href="{% static 'base/base.css'%}">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <title>{% block title %}Shift{% endblock title %}</title>
 
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-    <header>
-        {% if request.user.is_authenticated %}
+    <header class="p-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                    <img src="{% static 'base/images/clock.png'%}" height="32">
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Customers</a></li>
+                    <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
+                </ul>
+
+                <div class="dropdown">
+                    <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="material-symbols-outlined" style="font-size:32px">account_circle</span>
+                    </a>
+                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                    {% if request.user.is_authenticated %}
+                        <li><a class="dropdown-item" href="{% url 'user:user' %}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'user:log-out' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Log-out</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a class="dropdown-item" href="{% url 'user:log-in' %}">Log-in</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'user:sign-up' %}">Sign-up</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% comment %} 
             Hi {{ request.user.first_name }}
-            <form id="logout-form" method="post" action="{% url 'user:logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-primary">Log out</button>
-            </form>
-        {% else %}
-            <a class="btn btn-outline-primary" href="{% url 'user:login' %}">Log in</a>
-        {% endif %}
+            
+        
+            <a class="btn btn-outline-primary" href="{% url 'user:log-in' %}">Log in</a>
+         {% endcomment %}
     </header>
     <main>
         {% block contents %}
         {% endblock %}
     </main>
-    <footer>
-        This is footer
-    </footer>
 </body>
 
 </html>

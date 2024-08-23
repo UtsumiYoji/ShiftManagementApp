@@ -1,25 +1,28 @@
 {% extends 'base.html' %}
-{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+{% block title %}{{ block.super }} | Signup{% endblock title %}
 
 {% block contents %}
 
 {% load static %}
 {% load django_bootstrap5 %}
 
-<link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sign-up</li>
+        </ol>
+    </nav>
 
-<wrap>
-    <div>
-        <h1>Sign up</h1>
-        <p>If you already have account, <a href="{% url 'user:login' %}">here</a> to login</p>
-    </div>
-    <form method="post" class="form">
+    <h1 class="mb-5">Sign-up</h1>
+
+    <form method="post" class="w-75 container border rounded-5 p-5 d-flex flex-column">
         {% csrf_token %}
 
         {% bootstrap_form form %}
 
-        {% bootstrap_button button_type="submit" content="Sign up" %}
+        <button type="submit" class="btn btn-primary w-100">Create account</button>
     </form>
-</wrap>
+</div>
 
 {% endblock %}
