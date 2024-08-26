@@ -35,3 +35,27 @@ class BankInformationForm(forms.ModelForm):
     class Meta:
         model = models.BankInformation
         exclude = ('user_object', )
+
+
+class UserLeftForm(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ('date_left', )
+
+
+class EmployeeInformationForm(forms.ModelForm):
+    class Meta:
+        model = models.EmployeeInformation
+        exclude = ('user_object', )
+
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = models.Image
+        exclude = ('user_object', )
+
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = models.Note
+        exclude = ('user_object', )
