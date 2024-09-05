@@ -105,8 +105,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField("first name", max_length=150, blank=False, null=False)
     last_name = models.CharField("last name", max_length=150, blank=False, null=False)
 
-    date_joined = models.DateTimeField("date joined", null=True, blank=True, default=timezone.now)
-    date_left = models.DateTimeField("date left", null=True, blank=True)
+    date_joined = models.DateField("date joined", null=True, blank=True, default=timezone.now)
+    date_left = models.DateField("date left", null=True, blank=True)
 
     objects = UserManager()
 
@@ -151,7 +151,7 @@ class BankInformation(models.Model):
     institution_number = models.CharField('institution number', max_length=3, blank=False, null=False, validators=[only_int])
     transit_number = models.CharField('transit number', max_length=5, blank=False, null=False, validators=[only_int])
     account_number = models.CharField('account number', max_length=7, blank=False, null=False, validators=[only_int])
-    sin_number = models.CharField('sin number', max_length=9, blank=True, null=True, validators=[only_int])
+    sin_number = models.CharField('sin number', max_length=9, blank=False, null=False, validators=[only_int])
 
 
 class EmployeeType(models.Model):
@@ -167,10 +167,10 @@ class EmployeeInformation(models.Model):
     ]
     
     user_object = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False)
-    wage = models.FloatField('wage', null=True, blank=True)
-    wage_is_based_on = models.IntegerField(choices=WAGE_BASE_CHOICES, null=True, blank=True)
-    limit_work_hour = models.PositiveIntegerField('can work until', null=True, blank=True)
-    employee_type_object = models.ForeignKey(EmployeeType, on_delete=models.SET_NULL, null=True, blank=True)
+    wage = models.FloatField('wage', null=False, blank=False)
+    wage_is_based_on = models.IntegerField(choices=WAGE_BASE_CHOICES, null=False, blank=False)
+    limit_work_hour = models.PositiveIntegerField(null=True, blank=True, help_text='Worker can not work more than this hour because of VISA or other reasons')
+    employee_type_object = models.ForeignKey(EmployeeType, on_delete=models.RESTRICT, null=False, blank=False)
 
 
 class Image(models.Model):

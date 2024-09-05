@@ -149,5 +149,5 @@ AUTH_USER_MODEL = 'user.User'
 
 # login / logout
 LOGIN_URL = "user:log-in"
-LOGIN_REDIRECT_URL = "user:user-update"
+LOGIN_REDIRECT_URL = "user:user"
 LOGOUT_REDIRECT_URL = "user:log-in"

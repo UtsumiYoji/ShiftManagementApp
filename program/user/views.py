@@ -12,7 +12,7 @@ class CreateUserView(generic.CreateView):
     model = models.User
     form_class = forms.UserCreationForm
     template_name = 'user/create.html'
-    success_url = reverse_lazy('user:user-update')
+    success_url = reverse_lazy('user:user')
 
     def form_valid(self, form):
         ret = super().form_valid(form)
@@ -29,7 +29,7 @@ class UpdateUserView(mixins.LoginRequiredMixin, generic.UpdateView):
     model = models.User
     form_class = forms.UserChangeForm
     template_name = 'user/update.html'
-    success_url = reverse_lazy('user:user-update')
+    success_url = reverse_lazy('user:user')
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -37,7 +37,7 @@ class UpdateUserView(mixins.LoginRequiredMixin, generic.UpdateView):
 
 class PasswordChangeView(views.PasswordChangeView):
     form_class = auth_forms.PasswordChangeForm
-    success_url = reverse_lazy('user:user-update')
+    success_url = reverse_lazy('user:user')
     template_name = 'user/password.html'
 
 
@@ -48,16 +48,16 @@ class DeleteUserView(generic.DeleteView):
 
     def get_object(self, queryset=None):
         return self.request.user
-    
+
 
 class AddressView(CustomPermissionMixin, generic.UpdateView):
     model = models.Address
     form_class = forms.AddressForm
     template_name = 'user/address.html'
-    success_url = reverse_lazy('user:address-update')
+    success_url = reverse_lazy('user:address')
 
     def get_object(self, queryset=None):
-        return getattr(self.request.user, 'addresses', None)
+        return getattr(self.request.user, 'address', None)
 
     def form_valid(self, form):
         form.instance.user_object = self.request.user
@@ -68,7 +68,7 @@ class BankInformationView(CustomPermissionMixin, generic.UpdateView):
     model = models.BankInformation
     form_class = forms.BankInformationForm
     template_name = 'user/bank_information.html'
-    success_url = reverse_lazy('user:bank_information-update')
+    success_url = reverse_lazy('user:bank_information')
 
     def get_object(self, queryset=None):
         return getattr(self.request.user, 'bankinformation', None)
