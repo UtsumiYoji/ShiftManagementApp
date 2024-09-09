@@ -5,7 +5,6 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from . import models, forms
-from common.views import CustomPermissionMixin
 
 # Create your views here.
 class CreateUserView(generic.CreateView):
@@ -50,7 +49,7 @@ class DeleteUserView(generic.DeleteView):
         return self.request.user
 
 
-class AddressView(CustomPermissionMixin, generic.UpdateView):
+class AddressView(generic.UpdateView):
     model = models.Address
     form_class = forms.AddressForm
     template_name = 'user/address.html'
@@ -64,7 +63,7 @@ class AddressView(CustomPermissionMixin, generic.UpdateView):
         return super().form_valid(form)
     
 
-class BankInformationView(CustomPermissionMixin, generic.UpdateView):
+class BankInformationView(generic.UpdateView):
     model = models.BankInformation
     form_class = forms.BankInformationForm
     template_name = 'user/bank_information.html'
