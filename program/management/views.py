@@ -1,15 +1,17 @@
+from django.db.models.base import Model as Model
+from django.db.models.query import QuerySet
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.http import HttpResponse
-from django.template import loader
+from common.shortcuts import get_object_or_none
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . import models, forms
-from common.shortcuts import get_object_or_none, get_list_or_none
 from user import models as user_models
 
 
+# Base from
 class CheckAccessAuthorization(LoginRequiredMixin):
     redirect_to = reverse_lazy('management:top_page')
     restricted_page_url = '/management/'
@@ -52,11 +54,13 @@ class CheckAccessAuthorization(LoginRequiredMixin):
         return redirect(self.redirect_to)
 
 
+# top page
 class ManagementTopPageView(CheckAccessAuthorization, generic.TemplateView):
     template_name = 'management/top_page.html'
     restricted_page_url = reverse_lazy('common:top_page')
 
 
+# From here, form for manage access authorization
 class CreateUserAccessAuthorizationView(CheckAccessAuthorization, generic.CreateView):
     model = models.UserAccessAuthorization
     form_class = forms.UserAccessAuthorizationsForm
@@ -115,76 +119,144 @@ class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generi
     success_url = reverse_lazy('management:employeetype_access')
 
 
-class ListUserView(CheckAccessAuthorization, generic.ListView):
+# From here, it is for user
+class ListUserView(generic.ListView):
     model = user_models.User
-    restricted_page_url = '/management/user_information/'
-    template_name = 'management/list.html'
+    template_name = 'management/user/list.html'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
 
-class CreateUpdateEmployeeInformationView(CheckAccessAuthorization, generic.View):
-    template_name = ''
-    restricted_page_url = '/management/user_information/'
-    success_url = reverse_lazy('management:top_page')
-
-    def get(self, request, *args, **kwargs):
-        objects = dict()
-
-        # Get user information
-        user = get_object_or_none(user_models.User, pk=kwargs['pk'])
-        objects['user'] = user
-        objects['address'] = get_object_or_none(user_models.Address, user_object=user)
-        objects['bank'] = get_object_or_none(user_models.BankInformation, user_object=user)
-        objects['images'] = get_list_or_none(user_models.Image, user_object=user)
-        objects['notes'] = get_list_or_none(user_models.Note, user_object=user)
-
-        # Make forms
-        if hasattr(user, 'employeeinformation'):
-            objects['employee_form'] = forms.EmployeeInformationForm(instance=user.employeeinformation)
-        else: 
-            objects['employee_form'] = forms.EmployeeInformationForm()
-
-        return self.render_to_response(objects)
-
-    def post(self, request, *args, **kwargs):
-        objects = dict()
-
-        # Get user information
-        user = get_object_or_none(user_models.User, pk=kwargs['pk'])
-        objects['user'] = user
-        objects['address'] = get_object_or_none(user_models.Address, user_object=user)
-        objects['bank'] = get_object_or_none(user_models.BankInformation, user_object=user)
-        objects['images'] = get_list_or_none(user_models.Image, user_object=user)
-        objects['notes'] = get_list_or_none(user_models.Note, user_object=user)
-
-        # Make forms
-        if hasattr(user, 'employeeinformation'):
-            objects['employee_form'] = forms.EmployeeInformationForm(request.POST, instance=user.employeeinformation)
-        else: 
-            objects['employee_form'] = forms.EmployeeInformationForm(request.POST)
-
-        if objects['employee_form'].is_valid():
-            objects['employee_form'].instance.user_object = user
-            objects['employee_form'].save()
-            return redirect(self.success_url)
-
-        return self.render_to_response(objects)
-
-    def render_to_response(self, context):
-        template = loader.get_template(self.template_name)
-        return HttpResponse(template.render(context))
+        for object in queryset:
+            object.information = 'Incomplete'
+            if hasattr(object, 'bankinformation') and hasattr(object, 'employeeinformation'):
+                object.information = 'Complete'
+        
+        return queryset
     
 
-class CreateImageView(CheckAccessAuthorization, generic.CreateView):
+class DetailUserView(generic.DetailView):
+    model = user_models.User
+    template_name = "management/user/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bank_information'] = get_object_or_none(user_models.BankInformation, user_object=self.object)
+        context['employee_information'] = get_object_or_none(user_models.EmployeeInformation, user_object=self.object)
+        context['address'] = get_object_or_none(user_models.Address, user_object=self.object)
+        context['images'] = user_models.Image.objects.filter(user_object=self.object)
+        context['notes'] = user_models.Note.objects.filter(user_object=self.object)
+
+        return context
+    
+
+class UpdateEmployeeInformationView(generic.UpdateView):
+    model = user_models.EmployeeInformation
+    form_class = forms.EmployeeInformationForm
+    template_name = 'management/user/employee_information.html'
+    success_url = 'management:user_detail'
+
+    def get_object(self, queryset=None):
+        return get_object_or_none(
+            user_models.EmployeeInformation,
+            user_object=user_models.User.objects.get(pk=self.kwargs.get('pk'))
+        )
+
+    def form_valid(self, form):
+        form.instance.user_object = user_models.User.objects.get(pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        context['user'] = user_models.User.objects.get(pk=pk)
+        return context
+
+
+class CreateImageView(generic.CreateView):
     model = user_models.Image
     form_class = forms.ImageForm
-    template_name = ''
-    restricted_page_url = '/management/user_information/'
-    success_url = reverse_lazy('management:user_information')
+    template_name = 'management/user/image.html'
+    success_url = 'management:user_detail'
+
+    def form_valid(self, form):
+        form.instance.user_object = user_models.User.objects.get(pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        context['user'] = user_models.User.objects.get(pk=pk)
+        return context
 
 
-class CreateNoteView(CheckAccessAuthorization, generic.CreateView):
+class DeleteImageView(generic.DeleteView):
+    model = user_models.Image
+    success_url = 'management:user_detail'
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_object(self, queryset=None):
+        return get_object_or_none(user_models.Image, pk=self.kwargs.get('image_id'))
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class CreateNoteView(generic.CreateView):
     model = user_models.Note
     form_class = forms.NoteForm
-    template_name = ''
-    restricted_page_url = '/management/user_information/'
-    success_url = reverse_lazy('management:user_information')
+    template_name = 'management/user/note.html'
+    success_url = 'management:user_detail'
+
+    def form_valid(self, form):
+        form.instance.user_object = user_models.User.objects.get(pk=self.kwargs.get('pk'))
+        form.instance.editor_object = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        context['user'] = user_models.User.objects.get(pk=pk)
+        return context
+    
+
+class DeleteNoteView(generic.DeleteView):
+    model = user_models.Note
+    success_url = 'management:user_detail'
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
+
+    def get_object(self, queryset=None):
+        return get_object_or_none(user_models.Note, pk=self.kwargs.get('note_id'))
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.delete()
+        return HttpResponseRedirect(self.get_success_url())
+    
+
+class DateLeftView(generic.UpdateView):
+    model = user_models.User
+    form_class = forms.DateLeftForm
+    success_url = 'management:user_detail'
+    template_name = 'management/user/user_left.html'
+
+    def get_success_url(self) -> str:
+        return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
+    
+    def get_object(self, queryset=None):
+        return get_object_or_none(user_models.User, pk=self.kwargs.get('pk'))

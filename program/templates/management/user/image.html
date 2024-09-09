@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | Employee information{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:top_page' %}">Management</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:user_list' %}">User list</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:user_detail' user.id %}">{{user.first_name}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Image</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">Employee information of {{user.first_name}}</h1>
+
+    <form method="post" enctype="multipart/form-data" class="w-75 container border rounded-5 p-5 d-flex flex-column">
+        {% csrf_token %}
+
+        {% bootstrap_form form %}
+
+        <button type="submit" class="btn btn-primary w-100">Upload image</button>
+    </form>
+</div>
+
+{% endblock %}

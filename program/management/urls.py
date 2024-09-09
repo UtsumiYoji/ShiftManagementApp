@@ -18,5 +18,12 @@ urlpatterns = [
     path('access_authorization/employeetype/<int:pk>/delete', views.DeleteEmployeeTypeAccessAuthorizationView.as_view(), name='employeetype_access-delete'),
 
     # User information
-    path('user_information/<int:pk>', views.CreateUpdateEmployeeInformationView.as_view(), name='user_information'),
+    path('users/', views.ListUserView.as_view(), name='user_list'),
+    path('users/<int:pk>', views.DetailUserView.as_view(), name='user_detail'),
+    path('users/<int:pk>/employee_information', views.UpdateEmployeeInformationView.as_view(), name='employee_information'),
+    path('users/<int:pk>/image', views.CreateImageView.as_view(), name='image'),
+    path('users/<int:pk>/image/<int:image_id>/delete', views.DeleteImageView.as_view(), name='delete_image'),
+    path('users/<int:pk>/note', views.CreateNoteView.as_view(), name='note'),
+    path('users/<int:pk>/note/<int:note_id>/delete', views.DeleteNoteView.as_view(), name='delete_note'),
+    path('users/<int:pk>/left', views.DateLeftView.as_view(), name='user_left'),
 ]

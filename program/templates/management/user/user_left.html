@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static widget_tweaks %}
+{% block title %}{{ block.super }} | Note{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:top_page' %}">Management</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:user_list' %}">User list</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:user_detail' user.id %}">{{user.first_name}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User left</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">Quitment confirmation for {{user.first_name}}</h1>
+
+    <form method="post" class="w-75 container border rounded-5 p-5 d-flex flex-column">
+        {% csrf_token %}
+
+        <div class="alert alert-danger" role="alert">
+            <p class="fw-bold mb-1">Danger!: </p>
+            <p class="mb-0">You can add date if user left company.</p>
+            <p class="mb-0">Once you add date, user will be no longer added to shift.</p>
+        </div>
+
+        {{ form.date_left.label }}
+        {{ form.date_left | attr:"type:date" | add_class:"form-control mb-3" }}
+
+        <button type="submit" class="btn btn-primary w-100">Save</button>
+    </form>
+</div>
+
+{% endblock %}

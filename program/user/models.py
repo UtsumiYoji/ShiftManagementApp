@@ -105,8 +105,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField("first name", max_length=150, blank=False, null=False)
     last_name = models.CharField("last name", max_length=150, blank=False, null=False)
 
-    date_joined = models.DateField("date joined", null=True, blank=True, default=timezone.now)
-    date_left = models.DateField("date left", null=True, blank=True)
+    date_joined = models.DateField("Joined on", null=True, blank=True, default=timezone.now)
+    date_left = models.DateField("Left on", null=True, blank=True)
 
     objects = UserManager()
 
@@ -170,7 +170,7 @@ class EmployeeInformation(models.Model):
     wage = models.FloatField('wage', null=False, blank=False)
     wage_is_based_on = models.IntegerField(choices=WAGE_BASE_CHOICES, null=False, blank=False)
     limit_work_hour = models.PositiveIntegerField(null=True, blank=True, help_text='Worker can not work more than this hour because of VISA or other reasons')
-    employee_type_object = models.ForeignKey(EmployeeType, on_delete=models.RESTRICT, null=False, blank=False)
+    employee_type_object = models.ForeignKey(EmployeeType, verbose_name='Employee type', on_delete=models.RESTRICT, null=False, blank=False)
 
 
 class Image(models.Model):
@@ -182,7 +182,9 @@ class Image(models.Model):
 class Note(models.Model):
     user_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='user_notes_user')
     editor_object = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False, related_name='user_notes_editor')
+    title = models.CharField('title', max_length=255, null=False, blank=False)
     note = models.TextField(null=False, blank=False)
+    issued_at = models.DateTimeField('issued on', default=timezone.now)
 
 
 class Log(models.Model):

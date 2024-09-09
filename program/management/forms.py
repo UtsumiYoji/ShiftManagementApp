@@ -26,13 +26,31 @@ class EmployeeInformationForm(forms.ModelForm):
             )
         
 
+class UserLeftForm(forms.ModelForm):
+    class Meta:
+        model = user_models.User
+        fields = ('date_left', )
+
+
+class EmployeeInformationForm(forms.ModelForm):
+    class Meta:
+        model = user_models.EmployeeInformation
+        exclude = ('user_object', )
+
+
 class ImageForm(forms.ModelForm):
     class Meta:
         model = user_models.Image
-        fields = ('image_name', 'image')
+        exclude = ('user_object', )
 
 
 class NoteForm(forms.ModelForm):
     class Meta:
         model = user_models.Note
-        fields = ('note',)
+        fields = ('title', 'note')
+
+
+class DateLeftForm(forms.ModelForm):
+    class Meta:
+        model = user_models.User
+        fields = ('date_left', )
