@@ -1,58 +1,12 @@
 from django.db.models.base import Model as Model
-from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views import generic
-from django.shortcuts import redirect
 from common.shortcuts import get_object_or_none
 from django.urls import reverse_lazy, reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . import models, forms
 from user import models as user_models
-
-
-# Base from
-class CheckAccessAuthorization(LoginRequiredMixin):
-    redirect_to = reverse_lazy('management:top_page')
-    restricted_page_url = '/management/'
-
-    def dispatch(self, request, *args, **kwargs):
-        # make sure user already logined or not
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-
-        # get current url and user
-        user = self.request.user
-
-        # if user is staff, it can access
-        if user.is_staff:
-            return super().dispatch(request, *args, **kwargs)
-
-        # make sure user has authorization
-        query = models.UserAccessAuthorization.objects.select_related(
-            'restricted_page_object').filter(
-                user_object=user, restricted_page_object__url__contains=self.restricted_page_url)
-        if query:
-            return super().dispatch(request, *args, **kwargs)
-
-        # make sure user has employee information
-        if not hasattr(user, 'employeeinformation'):
-            return redirect(self.redirect_to)
-        
-        # make sure user has type
-        if not user.employeeinformation.employee_type_object:
-            return redirect(self.redirect_to)
-
-        # make type of user has authorization
-        type = self.request.user.employeeinformation.employee_type_object
-        query = models.EmployeeTypeAccessAuthorization.objects.select_related(
-            'restricted_page_object').filter(
-                employee_type_object=type, restricted_page_object__url__contains=self.restricted_page_url)
-        if query:
-            return super().dispatch(request, *args, **kwargs)
-        
-        return redirect(self.redirect_to)
-
+from common.views import CheckAccessAuthorization
 
 # top page
 class ManagementTopPageView(CheckAccessAuthorization, generic.TemplateView):
