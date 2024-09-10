@@ -7,14 +7,16 @@
 
 <head>
     <meta charset="utf-8">
-    {% bootstrap_javascript %}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-    {% bootstrap_css %}
-    <link rel="stylesheet" type='text/css' href="{% static 'base/base.css'%}">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    {% bootstrap_javascript %}
+    {% bootstrap_css %}
+
+    <link rel="stylesheet" type='text/css' href="{% static 'base/base.css'%}">
+    <script src="{% static 'base/base.js' %}"></script>
 
     <title>{% block title %}Shift{% endblock title %}</title>
 
@@ -60,10 +62,29 @@
             </div>
         </div>
     </header>
+    
     <main>
         {% block contents %}
         {% endblock %}
     </main>
+
+    <div class="modal fade" id="access-denied-modal" tabindex="-1" aria-labelledby="AccessDeniedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-danger" id="AccessDeniedModalLabel">Access denied</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Access denied. You are not authorized to view this page.
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

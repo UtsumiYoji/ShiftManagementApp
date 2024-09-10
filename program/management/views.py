@@ -74,9 +74,10 @@ class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generi
 
 
 # From here, it is for user
-class ListUserView(generic.ListView):
+class ListUserView(CheckAccessAuthorization, generic.ListView):
     model = user_models.User
     template_name = 'management/user/list.html'
+    restricted_page_url = reverse_lazy('management:user_list')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -89,9 +90,10 @@ class ListUserView(generic.ListView):
         return queryset
     
 
-class DetailUserView(generic.DetailView):
+class DetailUserView(CheckAccessAuthorization, generic.DetailView):
     model = user_models.User
     template_name = "management/user/detail.html"
+    restricted_page_url = reverse_lazy('management:user_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -104,10 +106,11 @@ class DetailUserView(generic.DetailView):
         return context
     
 
-class UpdateEmployeeInformationView(generic.UpdateView):
+class UpdateEmployeeInformationView(CheckAccessAuthorization, generic.UpdateView):
     model = user_models.EmployeeInformation
     form_class = forms.EmployeeInformationForm
     template_name = 'management/user/employee_information.html'
+    restricted_page_url = reverse_lazy('management:user_list')
     success_url = 'management:user_detail'
 
     def get_object(self, queryset=None):
@@ -130,10 +133,11 @@ class UpdateEmployeeInformationView(generic.UpdateView):
         return context
 
 
-class CreateImageView(generic.CreateView):
+class CreateImageView(CheckAccessAuthorization, generic.CreateView):
     model = user_models.Image
     form_class = forms.ImageForm
     template_name = 'management/user/image.html'
+    restricted_page_url = reverse_lazy('management:user_list')
     success_url = 'management:user_detail'
 
     def form_valid(self, form):
@@ -150,9 +154,10 @@ class CreateImageView(generic.CreateView):
         return context
 
 
-class DeleteImageView(generic.DeleteView):
+class DeleteImageView(CheckAccessAuthorization, generic.DeleteView):
     model = user_models.Image
     success_url = 'management:user_detail'
+    restricted_page_url = reverse_lazy('management:user_list')
 
     def get_success_url(self) -> str:
         return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
@@ -166,11 +171,12 @@ class DeleteImageView(generic.DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class CreateNoteView(generic.CreateView):
+class CreateNoteView(CheckAccessAuthorization, generic.CreateView):
     model = user_models.Note
     form_class = forms.NoteForm
     template_name = 'management/user/note.html'
     success_url = 'management:user_detail'
+    restricted_page_url = reverse_lazy('management:user_list')
 
     def form_valid(self, form):
         form.instance.user_object = user_models.User.objects.get(pk=self.kwargs.get('pk'))
@@ -187,9 +193,10 @@ class CreateNoteView(generic.CreateView):
         return context
     
 
-class DeleteNoteView(generic.DeleteView):
+class DeleteNoteView(CheckAccessAuthorization, generic.DeleteView):
     model = user_models.Note
     success_url = 'management:user_detail'
+    restricted_page_url = reverse_lazy('management:user_list')
 
     def get_success_url(self) -> str:
         return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})
@@ -203,11 +210,12 @@ class DeleteNoteView(generic.DeleteView):
         return HttpResponseRedirect(self.get_success_url())
     
 
-class DateLeftView(generic.UpdateView):
+class DateLeftView(CheckAccessAuthorization, generic.UpdateView):
     model = user_models.User
     form_class = forms.DateLeftForm
     success_url = 'management:user_detail'
     template_name = 'management/user/user_left.html'
+    restricted_page_url = reverse_lazy('management:user_list')
 
     def get_success_url(self) -> str:
         return reverse(self.success_url, kwargs={'pk': self.kwargs.get('pk')})

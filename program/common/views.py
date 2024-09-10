@@ -32,11 +32,11 @@ class CheckAccessAuthorization(LoginRequiredMixin):
 
         # make sure user has employee information
         if not hasattr(user, 'employeeinformation'):
-            return redirect(self.redirect_to)
+            return redirect(f'{self.redirect_to}?access=denied')
         
         # make sure user has type
         if not user.employeeinformation.employee_type_object:
-            return redirect(self.redirect_to)
+            return redirect(f'{self.redirect_to}?access=denied')
 
         # make type of user has authorization
         type = self.request.user.employeeinformation.employee_type_object
@@ -46,7 +46,7 @@ class CheckAccessAuthorization(LoginRequiredMixin):
         if query:
             return super().dispatch(request, *args, **kwargs)
         
-        return redirect(self.redirect_to)
+        return redirect(f'{self.redirect_to}?access=denied')
 
 
 class TopPageView(generic.TemplateView):
