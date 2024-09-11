@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'colorfield',
     'widget_tweaks',
+    'django_filters',
 
     # develop apps
     'common.apps.CommonConfig',
