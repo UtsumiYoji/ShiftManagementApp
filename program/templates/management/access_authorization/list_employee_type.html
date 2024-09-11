@@ -1,23 +1,72 @@
 {% extends 'base.html' %}
-{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+{% load static widget_tweaks %}
+{% block title %}{{ block.super }} | Note{% endblock title %}
 
 {% block contents %}
 
 {% load static %}
 {% load django_bootstrap5 %}
 
-<link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:top_page' %}">Management</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Employee type access authorizations</li>
+        </ol>
+    </nav>
 
-<wrap>
-    <div>
-        <h1>Access List</h1>
-    </div>
-    {% for object in object_list  %}
-        <li>
-            <a href="">{{ object.employee_type_object.type }}</a>
-            {{ object.url }}
-        </li>
-      {% endfor %}
-</wrap>
+    <h1>Employee type access authorizations</h1>
+    <a href="{% url 'management:user_access' %}">Switch to "User access authorizations" page</a>
+    <table class="mt-5 table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Employee type</th>
+                <th scope="col">Restricted page</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.employee_type_object }}</td>
+                    <td>{{ object.restricted_page_object }}</td>
+                    <td>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-{{ object.id }}">
+                                Delete
+                            </button>
+
+                            <div class="modal fade" id="modal-{{ object.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Confirmation</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this restriction rule?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <a href="{% url 'management:employeetype_access-delete' object.id %}" class="btn btn-danger">Delete</a>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">
+                <div class="mt-1 mb-1 alert alert-info" role="alert">
+                    No employee type restriction rules have been set.
+                </div>
+                </td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'management:employeetype_access-create' %}">Add restriction rule</a>
+</div>
 
 {% endblock %}

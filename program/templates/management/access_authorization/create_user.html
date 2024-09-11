@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | New authorizations{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+
+<link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:top_page' %}">Management</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'management:user_access' %}">User access authorizations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">New user restriction rule</h1>
+
+    <form method="post" class="w-75 container border rounded-5 p-5 d-flex flex-column">
+        {% csrf_token %}
+
+        {% bootstrap_form form %}
+
+        <button type="submit" class="btn btn-primary w-100">Save</button>
+    </form>
+</div>
+
+{% endblock %}

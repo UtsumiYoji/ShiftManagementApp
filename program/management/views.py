@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.views import generic
 from common.shortcuts import get_object_or_none
 from django.urls import reverse_lazy, reverse
+from django_filters import FilterSet, filters
 
 from . import models, forms
 from user import models as user_models
@@ -18,7 +19,7 @@ class ManagementTopPageView(CheckAccessAuthorization, generic.TemplateView):
 class CreateUserAccessAuthorizationView(CheckAccessAuthorization, generic.CreateView):
     model = models.UserAccessAuthorization
     form_class = forms.UserAccessAuthorizationsForm
-    template_name = 'management/access_authorization/create.html'
+    template_name = 'management/access_authorization/create_user.html'
     restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:user_access')
 
@@ -26,7 +27,7 @@ class CreateUserAccessAuthorizationView(CheckAccessAuthorization, generic.Create
 class CreateEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.CreateView):
     model = models.EmployeeTypeAccessAuthorization
     form_class = forms.EmployeeTypeAccessAuthorizationsForm
-    template_name = 'management/access_authorization/create.html'
+    template_name = 'management/access_authorization/create_employee_type.html'
     restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:employeetype_access')
 
@@ -45,19 +46,38 @@ class ListEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.
 
 class DeleteUserAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
     model = models.UserAccessAuthorization
-    template_name = 'management/access_authorization/delete.html'
     restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:user_access')
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.delete()
+        return HttpResponseRedirect(self.success_url)
 
 
 class DeleteEmployeeTypeAccessAuthorizationView(CheckAccessAuthorization, generic.DeleteView):
     model = models.EmployeeTypeAccessAuthorization
-    template_name = 'management/access_authorization/delete.html'
     restricted_page_url = '/management/access_authorization/'
     success_url = reverse_lazy('management:employeetype_access')
 
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.delete()
+        return HttpResponseRedirect(self.success_url)
+
 
 # From here, it is for user
+class UserFilter(FilterSet):
+    date_left = filters.BooleanFilter(method='filter_date_left')
+
+    def filter_date_left(self, queryset, name, value):
+        return queryset.filter(date_left__isnull=value)
+
+    class Meta:
+        model = user_models.User
+        fields = ['date_left', ]
+
+
 class ListUserView(CheckAccessAuthorization, generic.ListView):
     model = user_models.User
     template_name = 'management/user/list.html'
@@ -65,6 +85,7 @@ class ListUserView(CheckAccessAuthorization, generic.ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        queryset = UserFilter(self.request.GET, queryset).qs
 
         for object in queryset:
             object.information = 'Incomplete'
