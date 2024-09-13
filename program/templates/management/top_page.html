@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+{% block title %}{{ block.super }} | Management{% endblock title %}
 
 {% block contents %}
 
@@ -8,14 +8,24 @@
 
 <link rel="stylesheet" type='text/css' href="{% static 'user/create.css'%}">
 
-<wrap>
-    <div>
-        <h1>Access</h1>
-    </div>
-    <a href="{% url 'management:user_access-create' %}">{% url 'management:user_access-create' %}</a>
-    <a href="{% url 'management:user_access' %}">{% url 'management:user_access' %}</a>
-    <a href="{% url 'management:employeetype_access-create' %}">{% url 'management:employeetype_access-create' %}</a>
-    <a href="{% url 'management:employeetype_access' %}">{% url 'management:employeetype_access' %}</a>
-</wrap>
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Management</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">Management</h1>
+
+    <ul class="fs-4">
+        <li>Access authorization</li>
+        <ul>
+            <li><a href="{% url 'management:user_access' %}">User access authorization management</a></li>
+            <li><a href="{% url 'management:employeetype_access' %}">Employee type access authorization management</a></li>
+        </ul>
+        <li><a href="{% url 'management:user_list' %}">Users management</a></li>
+    </ul>
+</div>
 
 {% endblock %}
