@@ -44,7 +44,6 @@ INSTALLED_APPS = [
 
     # libs
     'django_bootstrap5',
-    'colorfield',
     'widget_tweaks',
     'django_filters',
 

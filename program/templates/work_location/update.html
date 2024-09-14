@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static widget_tweaks %}
-{% block title %}{{ block.super }} | Work location create{% endblock title %}
+{% block title %}{{ block.super }} | Work location update{% endblock title %}
 
 {% block contents %}
 
@@ -12,11 +12,11 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'work_location:list' %}">Work locations</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create</li>
+            <li class="breadcrumb-item active" aria-current="page">Update for {{ form.name.value }}</li>
         </ol>
     </nav>
 
-    <h1 class="mb-5">New work location</h1>
+    <h1 class="mb-5">Update work location</h1>
 
     <form method="post" class="w-75 container border rounded-5 p-5 d-flex flex-column">
         {% csrf_token %}
@@ -32,7 +32,32 @@
             <div class="form-text">{{ form.color.help_text }}</div>
         </div>
 
+        <hr>
+
+        <h3 class="mb-3">Status of this work location</h2>
+
+        <div class="mt-1 mb-1 alert alert-warning" role="alert">
+            <p class="mb-1">You can make it disabled if this store is not available</p>
+            <p class="mb-0">You can make it not disabled any time.</p>
+        </div>
+
+        <label class="form-label">
+            Stores available
+        </label>
+        <select id="id_disabled" name="disabled" class="form-select">
+            {% if form.disabled.value %}
+                <option value="True" selected>No (Store disabled)</option>
+                <option value="False">Yes (Store opening)</option>
+            {% else %}
+                <option value="True">No (Store disabled)</option>
+                <option value="False" selected>Yes (Store opening)</option>
+            {% endif %}
+        </select>
+
+        <hr>
+
         <button type="submit" class="btn btn-primary w-100">Save</button>
+
     </form>
 </div>
 

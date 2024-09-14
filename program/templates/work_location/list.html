@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | Work locations{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Work locations</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">Work locations</h1>
+
+    <select class="form-select w-25 ms-auto mb-2">
+        <option value="False">Current Work lcoations</option>
+        <option value="">Entire Work lcoations</option>
+        <option value="True">Disabled Work lcoations</option>
+    </select>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Place name</th>
+                <th scope="col">City</th>
+                <th scope="col">Color</th>
+                <th scope="col">Made on</th>
+                <th scope="col">Disabled</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for object in object_list %}
+                <tr>
+                    <td><a href="{% url 'work_location:update' object.pk %}">{{ object.id }}</a></td>
+                    <td>{{ object.name }}</td>
+                    <td>{{ object.place_name|default_if_none:"" }}</td>
+                    <td>{{ object.city| default_if_none:"" }}</td>
+                    <td style="color:{{ object.color }}">{{ object.color }}</td>
+                    <td>{{ object.made_on }}</td>
+                    <td class="text-danger">{{ object.disabled|default:"" }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="7">
+                    <div class="mt-1 mb-1 alert alert-info" role="alert">
+                        No work locations have been made.
+                    </div>
+                </td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'work_location:create' %}">Add work location</a>
+</div>
+
+<script src="{% static 'work_location/list.js' %}"></script>
+{% endblock %}
