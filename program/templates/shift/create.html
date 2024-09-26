@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static widget_tweaks %}
+{% block title %}{{ block.super }} | Shift create{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+<link rel="stylesheet" type='text/css' href="{% static 'shift/create.css'%}">
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shift:top_page' %}">Shift</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">New Shift</h1>
+
+    <h4>
+    Making time shift From
+    <input value="2024-09-14T04:00" id="start_datetime" type="datetime-local" step="3600" class="form-control w-25 d-inline">
+    To
+    <input value="2024-09-14T16:00" id="end_datetime" type="datetime-local" step="3600" class="form-control w-25 d-inline">
+    <button class="btn btn-primary make-calendar">Create</button>
+    </h4>
+
+    <div class="calendar-container w-100">
+    </div>
+</div>
+
+<div class="d-none">
+    {{ user_shift_formset }}
+    {{ break_time_form }}
+
+    <div class="card shift_detail">
+        <div class="card-body container">
+            <h5 class="card-title">You're selecting </h5>
+            <div class="row mb-1">
+                <div class="col-5">Work lcoation</div>
+                <div class="col-6">
+                    <select class='work-location'>
+                        <option value="0" color="lightgray"></option>
+                        {% for location in work_locations %}
+                            <option value="{{ location.id }}" color="{{ location.color }}" style="color:{{ location.color }}">
+                                {{ location.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-1 work-location-color" style="color:lightgray">■</div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-5">Start at</div>
+                <div class="col-7 start-at" value=""></div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-5">Finish at</div>
+                <div class="col-7 finish-at" value=""></div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-primary w-100 mb-1 save">
+                    Save</button>
+                    <button class="btn btn btn-outline-danger w-100 delete">
+                    Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const users = {{ users|safe }};
+</script>
+<script src="{% static 'shift/create.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,56 @@
+table {
+    table-layout: fixed;
+    width: fit-content;
+}
+
+.shift {
+    td {
+        width: 30px;
+        height: 24px;
+        border: 1px solid black;
+        overflow: visible;
+        position: relative;
+    }
+
+    .most-left-cell {
+        width: 100px;
+    }
+
+    .work-locations {
+        width: 100%;
+        height: 100%;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        font-size: 16px;
+        text-align: center;
+    }
+}
+
+.datetimes {
+    margin-left: 70px;
+
+    td{
+        padding: 0;
+        width: 60px;
+        text-align: center;
+    }
+}
+
+.shift_detail{
+    width: 400px;
+    position: absolute;
+    top: 30px;
+
+    select {
+        width: 100%;
+    }
+
+    .work-location-color{
+        padding-left: 0;
+    }
+
+    button {
+        padding: 0;
+    }
+}
