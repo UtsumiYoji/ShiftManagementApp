@@ -3,6 +3,5 @@ from . import models
 
 
 # Register your models here.
-admin.site.register(models.WorkLocation)
 admin.site.register(models.UserShift)
 admin.site.register(models.BreakTime)

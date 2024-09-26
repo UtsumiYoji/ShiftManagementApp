@@ -1,26 +1,29 @@
-from django.views.generic import edit
+from django.views import generic
 from django.urls import reverse_lazy
-from django.forms import modelformset_factory
+from django.forms import formset_factory
 
 from . import models, forms
+from user import models as user_models
+
+class TopPageView(generic.TemplateView):
+    template_name = 'common/top_page.html'
 
 
-class CreateWorkLocationView(edit.BaseFormView):
-    template_name = 'shift/create_work_location.html'
+class CreateView(generic.edit.BaseFormView, generic.TemplateView):
+    template_name = 'shift/create.html'
     success_url = reverse_lazy('')
 
-    def make_formset(self, model, form, request_post_data=None):
+    def make_formset(self, form, request_post_data=None):
         if request_post_data is None:
-            result = modelformset_factory(
-                model=model,
+            result = formset_factory(
                 form=form,
                 extra=1,
                 max_num=2,
             )
         else:
-            result = modelformset_factory(
-                model=model,
+            result = formset_factory(
                 form=form,
+                extra=1,
                 max_num=(request_post_data) # need to be updated
             )(
                 request_post_data
@@ -29,65 +32,23 @@ class CreateWorkLocationView(edit.BaseFormView):
         return result
 
     def get_context_data(self, **kwargs):
-        result = super().get_context_data(**kwargs)
-        result['title'] = 'Create Work Location'
-        result['work_places'] = models.WorkLocation.objects.all()
-
-        if 'formset' not in kwargs:
-            kwargs['formset'] = self.make_formset(
-                models.WorkLocation, forms.WorkLocationForm)
-        
-        return result
-
-    def get(self, request, *args, **kwargs):
-        return self.render_to_response(self.get_context_data())
-    
-    def post(self, request, *args, **kwargs):
-        formset = self.make_formset(
-            models.WorkLocation, forms.WorkLocationForm, request.POST)
-
-        if formset.is_valid():
-            formset.save()
-            return self.form_valid(formset)
-        else:
-            return self.render_to_response(
-                self.get_context_data(formset=formset))
-
-
-class CreateShiftView(edit.BaseFormView):
-    template_name = 'shift/create_shift.html'
-    success_url = reverse_lazy('')
-
-    def make_formset(self, model, form, request_post_data=None):
-        if request_post_data is None:
-            result = modelformset_factory(
-                model=model,
-                form=form,
-                extra=1,
-                max_num=2,
-            )
-        else:
-            result = modelformset_factory(
-                model=model,
-                form=form,
-                max_num=(request_post_data) # need to be updated
-            )(
-                request_post_data
-                )
-
-        return result
-
-    def get_context_data(self, **kwargs):
-        result = super().get_context_data(**kwargs)
-        result['title'] = 'Create shift'
+        result = kwargs
+        result['users'] = list(user_models.User.objects.filter(
+            date_left=None
+        ).values('id', 'first_name'))
+        result['work_locations'] = models.WorkLocation.objects.filter(
+            disabled=False
+        )
 
         if 'user_shift_formset' not in kwargs:
             kwargs['user_shift_formset'] = self.make_formset(
-                models.UserShift, forms.UserShiftForm)
+                forms.UserShiftForm
+                )
             
         if 'break_time_form' not in kwargs:
             kwargs['break_time_form'] = self.make_formset(
-                models.BreakTime, forms.BreakTimeForm)
+                forms.BreakTimeForm
+                )
         
         return result
 
@@ -96,10 +57,10 @@ class CreateShiftView(edit.BaseFormView):
     
     def post(self, request, *args, **kwargs):
         user_shift_formset = self.make_formset(
-            models.UserShift, forms.UserShiftForm, request.POST)
+            forms.UserShiftForm, request.POST)
         
         break_time_formset = self.make_formset(
-            models.BreakTime, forms.BreakTimeForm, request.POST)
+            forms.BreakTimeForm, request.POST)
 
         if (user_shift_formset.is_valid() and break_time_formset.is_valid()):
             user_shift_formset.save()
