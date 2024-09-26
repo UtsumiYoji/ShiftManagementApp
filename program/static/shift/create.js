@@ -81,6 +81,9 @@ function paint_out_cell(work_location_id=null) {
     }
 }
 
+ADDING_BREAK_TEXT = 'Click calendar to add break or here to cancel';
+WAITING_BREAK_TEXT = 'Add break time';
+
 // clicking a cell
 $(document).on('click', 'td.shift_cell', function() {
     // check if it alreday has a detail card
@@ -126,7 +129,8 @@ $(document).on('click', 'td.shift_cell', function() {
         
         paint_out_cell();
         
-        // disable select
+        // disable select and break button
+        elm.find('.break').prop('disabled', true);
         $(".most-left-cell>select").prop('disabled', true);
         return;
     }
@@ -137,6 +141,22 @@ $(document).on('click', 'td.shift_cell', function() {
     var detail_row = card.closest('tr');
     if (!(clicked_row[0] == detail_row[0])) {
         return;
+    }
+
+    // If user is making break time
+    if (card.find('.break').text() == ADDING_BREAK_TEXT) {
+        // Make sure user clicling cell which has work_location_id
+        if ($(this).attr('work_location_id')) {
+            // If cell is already painted out, it will become normal
+            if ($(this).css('background-color') == 'rgb(255, 255, 0)') {
+                var color = card.find('option:selected').attr('color');
+                $(this).css('background-color', color);
+            } else {
+                // Paint out a cell
+                $(this).css('background-color', 'yellow');
+            }
+        return;
+        }
     }
 
     // If card alreday has finish time, it cannot be fixed
@@ -163,6 +183,7 @@ $(document).on('click', 'td.shift_cell', function() {
     card.find('.finish-at').attr('value', finish_at);
     var work_location_id = card.find('.work-location').find('option:selected').val();
     paint_out_cell(work_location_id);
+    elm.find('.break').prop('disabled', false);
 });
 
 // clicking a detial card
@@ -178,34 +199,40 @@ $(document).on('change', '.work-location', function() {
     paint_out_cell(work_location_id);    
 });
 
+// clicking break
+$(document).on('click', '.break', function() {
+    if ($(this).text() == ADDING_BREAK_TEXT) {
+        $(this).text(WAITING_BREAK_TEXT);
+    } else {
+        $(this).text(ADDING_BREAK_TEXT);
+    }
+});
+
 // clicking save
-$(document).on('click', '.save', function(event) {
+$(document).on('click', '.save', function() {
     $(this).closest('.shift_detail').remove();
 
     // enable select
     $(".most-left-cell>select").prop('disabled', false);
 });
 
-// clicking save
-$(document).on('click', '.delete', function(event) {
+// clicking delete
+$(document).on('click', '.delete', function() {
     // Retain datetimes
     var card = $('.shift_detail').first()
     var start_at = card.find('.start-at').attr('value');
     var finish_at = card.find('.finish-at').attr('value');
-
-    card.find('.start-at').attr('value', '');
-    card.find('.finish-at').attr('value', '');
 
     // Paint off cells
     var tr = card.closest('tr');
     var start_cell = tr.find('td[value="'+start_at+'"]').prev();
     var finish_cell = tr.find('td[value="'+finish_at+'"]');
 
-    // start_cell.css('background-color', '');
+    // delete color
     start_cell.nextUntil(finish_cell).css('background-color', '');
     start_cell.nextUntil(finish_cell).attr('work_location_id', '');
 
-    // enable select
+    // delete card
     $(this).closest('.shift_detail').remove();
     $(".most-left-cell>select").prop('disabled', false);
 });
