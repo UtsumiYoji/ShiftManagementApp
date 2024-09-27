@@ -53,7 +53,7 @@ $(document).on('click', '.make-calendar', function() {
 
     // create calendar
     element += '<table class="shift overflow-x-scroll">\n<tbody>\n<tr>';
-    element += '\n<td class="most-left-cell"><select class="work-locations">\n<option></option>';
+    element += '\n<td class="most-left-cell"><select class="user">\n<option></option>';
     users.forEach(user => {
         element += '\n<option value="' + user.id + '">' + user.first_name + '</option>';
     });
@@ -89,6 +89,22 @@ $(document).on('click', '.delete-calendar', function() {
 
 // adding a row
 $(document).on('change', '.most-left-cell>select' , function() {
+    // judge user doesn't exit
+    var selected_user_id = $(this).val()
+    let count = 0;
+    $(this).closest('tbody').find('.user').each(function() {
+        if ($(this).val() == selected_user_id) {
+            count += 1;
+        }
+    });
+    if (count > 1) {
+        alert('User already exists.');
+        $(this).val('');
+        return;
+    }
+
+    $(this).closest('tbody').find('.user').val()
+
     // judge if it is the last row
     if (!($(this).closest('tr').is(':last-child'))) {
         return;
