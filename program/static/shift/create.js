@@ -57,6 +57,7 @@ $(document).on('click', '.make-calendar', function() {
     users.forEach(user => {
         element += '\n<option value="' + user.id + '">' + user.first_name + '</option>';
     });
+    element += '\n<option value="-1" style="color:red;">Delete</option>';
     element += '\n</select></td>';
 
     count -= 1;
@@ -87,6 +88,12 @@ $(document).on('click', '.delete-calendar', function() {
     }
 });
 
+// store previous value
+$(document).on('focus', '.most-left-cell>select', function() {
+    previousValue = $(this).val();
+});
+
+
 // adding a row
 $(document).on('change', '.most-left-cell>select' , function() {
     // judge user doesn't exit
@@ -103,8 +110,22 @@ $(document).on('change', '.most-left-cell>select' , function() {
         return;
     }
 
-    $(this).closest('tbody').find('.user').val()
+    // judge if it is delete
+    if (selected_user_id == -1) {
+        // cannot delete last row
+        if ($(this).closest('tr').is(':last-child')) {
+            $(this).val('');
+            return;
+        }
 
+        if (!confirm('Are you sure to this row delete?')) {
+            $(this).val(previousValue);
+        } else {
+            $(this).closest('tr').remove();
+        }
+        return;
+    }
+    
     // judge if it is the last row
     if (!($(this).closest('tr').is(':last-child'))) {
         return;
