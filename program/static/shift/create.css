@@ -25,10 +25,15 @@ table {
         font-size: 16px;
         text-align: center;
     }
+
+    .total-hour {
+        width: 50px;
+        text-align: center;
+    }
 }
 
 .datetimes {
-    margin-left: 70px;
+    margin-left: 120px;
 
     td{
         padding: 0;

@@ -59,6 +59,7 @@ $(document).on('click', '.make-calendar', function() {
     });
     element += '\n<option value="-1" style="color:red;">Delete</option>';
     element += '\n</select></td>';
+    element += '\n<td class="total-hour">0:00</td>'
 
     count -= 1;
     for (var i = 0; i < count; i++) {
@@ -75,9 +76,11 @@ $(document).on('click', '.make-calendar', function() {
     $(this).closest('.shift-calendar').find('.calendar-container').append(element);
 
     // add new blank shift-calendar
+    start_datetime.setDate(start_datetime.getDate() + 1);
+    end_datetime.setDate(end_datetime.getDate() + 1);
     clone.find('.datetimepicker').datetimepicker()
-    clone.find('.start_datetime').val(formatDate(end_datetime)).datetimepicker('update');
-    clone.find('.end_datetime').val('');
+    clone.find('.start_datetime').val(formatDate(start_datetime)).datetimepicker('update');
+    clone.find('.end_datetime').val(formatDate(end_datetime)).datetimepicker('update');
     $(this).closest('.shift-calendar').after(clone);
 });
 
@@ -138,6 +141,7 @@ $(document).on('change', '.most-left-cell>select' , function() {
     // clear row
     $(clone).find('td').css('background-color', '');
     $(clone).find('td').attr('work_location_id', '');
+    $(clone).find('total-hour').text('0:00');
 });
 
 function date_to_string(date) {
@@ -178,6 +182,19 @@ function paint_out_cell(work_location_id=null) {
     }
 }
 
+function calculate_total_hour(tr_elm) {
+    var total_minites = 0;
+    tr_elm.find('td').each(function() {
+        var bg_color = $(this).css('background-color');
+        
+        if ((bg_color != 'rgba(0, 0, 0, 0)') && (bg_color != 'rgb(255, 255, 0)')) {
+            total_minites += 30;
+        }
+    });
+    tr_elm.find('.total-hour').text(
+        Math.floor(total_minites/60) + ':' + (total_minites % 60).toString().padStart(2, '0'));
+}
+
 ADDING_BREAK_TEXT = 'Click calendar to add break or here to cancel';
 WAITING_BREAK_TEXT = 'Add break time';
 
@@ -189,9 +206,7 @@ $(document).on('click', 'td.shift_cell', function() {
         if ($(this).attr('work_location_id')) {
             // find start cell and finish cell
             var work_location_id = $(this).attr('work_location_id');
-            var start_cell = $(this).next().prevUntil(
-                '.shift_cell[work_location_id!="'+work_location_id+'"]'
-            ).last();
+            var start_cell = $(this).next().prevUntil('.total-hour').last();
             var finish_cell = $(this).prev().nextUntil(
                 '.shift_cell[work_location_id!="'+work_location_id+'"]'
             ).last();
@@ -252,6 +267,7 @@ $(document).on('click', 'td.shift_cell', function() {
                 // Paint out a cell
                 $(this).css('background-color', 'rgb(255, 255, 0)');
             }
+            calculate_total_hour($(this).closest('tr'));
         return;
         }
     }
@@ -280,6 +296,7 @@ $(document).on('click', 'td.shift_cell', function() {
     card.find('.finish-at').attr('value', finish_at);
     var work_location_id = card.find('.work-location').find('option:selected').val();
     paint_out_cell(work_location_id);
+    calculate_total_hour($(this).closest('tr'));
     elm.find('.break').prop('disabled', false);
 });
 
@@ -330,6 +347,7 @@ $(document).on('click', '.delete', function() {
     start_cell.nextUntil(finish_cell).attr('work_location_id', '');
 
     // delete card
+    calculate_total_hour($(this).closest('tr'));
     $(this).closest('.shift_detail').remove();
     $(".most-left-cell>select").prop('disabled', false);
 });

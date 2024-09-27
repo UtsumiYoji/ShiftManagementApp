@@ -11,6 +11,5 @@ class UserShift(models.Model):
 
 
 class BreakTime(models.Model):
-    user_object = models.ForeignKey(user_models.User, on_delete=models.CASCADE, null=False, blank=False)
+    user_shift_object = models.ForeignKey(UserShift, on_delete=models.CASCADE, null=False, blank=False)
     start_at = models.DateTimeField(null=False, blank=False)
-    finish_at = models.DateTimeField(null=False, blank=False)
