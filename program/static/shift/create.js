@@ -1,25 +1,57 @@
-// Start making a shift
-$('.make-calendar').on('click', function() {
-    var start_datetime = $('#start_datetime').val();
-    var end_datetime = $('#end_datetime').val();
-    
-    start_datetime = new Date(start_datetime);
-    end_datetime = new Date(end_datetime);
+function formatDate(date) {
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    var hours = String(date.getHours()).padStart(2, '0');
+    var minutes = String(date.getMinutes()).padStart(2, '0');
 
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+// Start making a shift
+$(document).on('click', '.make-calendar', function() {
+    // before adding, store original
+    clone = $(this).closest('.shift-calendar').clone();
+    
+    // make elements
+    var title_elm = $(this).closest('.shift-calendar')
+    var start_datetime = new Date(title_elm.find('.start_datetime').val());
+    var end_datetime = new Date(title_elm.find('.end_datetime').val());
+
+    // if its empty, return
+    if (start_datetime == 'Invalid Date' || end_datetime == 'Invalid Date') {
+        alert('Please set start and end time.');
+        return;
+    }
+
+    // Rewrite date
+    start_datetime.setMinutes(0);
+    end_datetime.setMinutes(0);
+    title_elm.find('.start_datetime').val(formatDate(start_datetime)).datetimepicker('update');
+    title_elm.find('.end_datetime').val(formatDate(end_datetime)).datetimepicker('update');
+
+    // calculate diff
     diff = (end_datetime - start_datetime) / (1000 * 60);
-    count = diff / 30 + 1;
+    if (diff < 60){
+        alert('Please set more than 60 minutes. (end time should be after start time)');
+        return;
+    } else {
+        count = diff / 30 + 1;
+    }
     
     datetimes = [];
     for (i = 0; i < count/2; i++) {
         datetimes.push(new Date(start_datetime.getTime() + (i * 60 * 60 * 1000)));
     }
     
+    // create times
     var element = '<table class="datetimes">\n<tbody>\n<tr>';
     datetimes.forEach(datetime => {
         element += '<td>' + datetime.getHours() + ':00</td>';
     });
-    element += '\n</tr>\n</tbody>\n</table>';
+    element += '\n</tr">\n</tbody>\n</table>';
 
+    // create calendar
     element += '<table class="shift overflow-x-scroll">\n<tbody>\n<tr>';
     element += '\n<td class="most-left-cell"><select class="work-locations">\n<option></option>';
     users.forEach(user => {
@@ -34,7 +66,25 @@ $('.make-calendar').on('click', function() {
     }
     element += '\n</tr>\n</tbody>\n</table>';
 
-    $('.calendar-container').append(element);
+    // change button to delete, add calendar
+    title_elm.find('.start_datetime').prop('disabled', true);
+    title_elm.find('.end_datetime').prop('disabled', true);
+    $(this).closest('.shift-calendar').find('.make-calendar').toggle();
+    $(this).closest('.shift-calendar').find('.delete-calendar').toggle();
+    $(this).closest('.shift-calendar').find('.calendar-container').append(element);
+
+    // add new blank shift-calendar
+    clone.find('.datetimepicker').datetimepicker()
+    clone.find('.start_datetime').val(formatDate(end_datetime)).datetimepicker('update');
+    clone.find('.end_datetime').val('');
+    $(this).closest('.shift-calendar').after(clone);
+});
+
+// delete calendar
+$(document).on('click', '.delete-calendar', function() {
+    if (confirm('Are you sure to delete?')) {
+        $(this).closest('.shift-calendar').remove();
+    }
 });
 
 // adding a row
@@ -47,6 +97,10 @@ $(document).on('change', '.most-left-cell>select' , function() {
     var row = this.closest('tr');
     var clone = row.cloneNode(true);
     row.parentNode.appendChild(clone);
+
+    // clear row
+    $(clone).find('td').css('background-color', '');
+    $(clone).find('td').attr('work_location_id', '');
 });
 
 function date_to_string(date) {
@@ -72,7 +126,13 @@ function paint_out_cell(work_location_id=null) {
     var start_cell = tr.find('td[value="'+start_at+'"]');
     var finish_cell = tr.find('td[value="'+finish_at+'"]');
     start_cell.css('background-color', color);
-    start_cell.nextUntil(finish_cell).css('background-color', color);
+    
+    // do not paint out break time
+    start_cell.nextUntil(finish_cell).filter(
+        function() {
+            return $(this).css('background-color') != 'rgb(255, 255, 0)';
+        }
+    ).css('background-color', color);
 
     // Save work location id
     if (work_location_id != null) {
@@ -153,7 +213,7 @@ $(document).on('click', 'td.shift_cell', function() {
                 $(this).css('background-color', color);
             } else {
                 // Paint out a cell
-                $(this).css('background-color', 'yellow');
+                $(this).css('background-color', 'rgb(255, 255, 0)');
             }
         return;
         }

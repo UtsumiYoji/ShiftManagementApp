@@ -41,6 +41,8 @@ table {
     width: 400px;
     position: absolute;
     top: 30px;
+    background-color: white;
+    z-index: 1;
 
     select {
         width: 100%;

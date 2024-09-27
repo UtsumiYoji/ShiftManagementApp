@@ -19,15 +19,19 @@
 
     <h1 class="mb-5">New Shift</h1>
 
-    <h4>
-    Making time shift From
-    <input value="2024-09-14T04:00" id="start_datetime" type="datetime-local" step="3600" class="form-control w-25 d-inline">
-    To
-    <input value="2024-09-14T16:00" id="end_datetime" type="datetime-local" step="3600" class="form-control w-25 d-inline">
-    <button class="btn btn-primary make-calendar">Create</button>
-    </h4>
+    <div class="shift-calendar mb-5">
+        <h4>
+        Making time shift From
+        <input class="datetimepicker start_datetime form-control w-25 d-inline">
+        To
+        <input class="datetimepicker end_datetime form-control w-25 d-inline">
+        <button class="btn btn-primary make-calendar">Create</button>
+        <button class="btn btn-danger delete-calendar" style="display:none;">Delete</button>
+        </h4>
 
-    <div class="calendar-container w-100">
+        <div class="calendar-container w-100">
+        </div>
+        <hr class="mb-5">
     </div>
 </div>
 
@@ -78,9 +82,33 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="delete-calender-modal" tabindex="-1" aria-labelledby="AccessDeniedModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-danger" id="AccessDeniedModalLabel">Delete confirmation</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete this calendar?
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+{% comment %} library {% endcomment %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" integrity="sha512-bYPO5jmStZ9WI2602V2zaivdAnbAhtfzmxnEGh9RwtlI00I9s8ulGe4oBa5XxiC6tCITJH/QG70jswBhbLkxPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% comment %} My js {% endcomment %}
 <script>
+    $('.datetimepicker').datetimepicker();
     const users = {{ users|safe }};
 </script>
 <script src="{% static 'shift/create.js' %}"></script>
