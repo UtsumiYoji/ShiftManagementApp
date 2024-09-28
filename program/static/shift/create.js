@@ -161,6 +161,9 @@ function paint_out_cell(work_location_id=null) {
     var tr = card.closest('tr');
     if (finish_at == "") {
         tr.find('td[value="'+start_at+'"]').css('background-color', color)
+        if (work_location_id != null) {
+            tr.find('td[value="'+start_at+'"]').attr('work_location_id', work_location_id);
+        }
         return
     }
 
@@ -204,12 +207,26 @@ $(document).on('click', 'td.shift_cell', function() {
     if ($('.shift_detail').length == 1) {
         // If clicked row already has work_location_id(color)
         if ($(this).attr('work_location_id')) {
-            // find start cell and finish cell
+            // declare variables
             var work_location_id = $(this).attr('work_location_id');
-            var start_cell = $(this).next().prevUntil('.total-hour').last();
-            var finish_cell = $(this).prev().nextUntil(
-                '.shift_cell[work_location_id!="'+work_location_id+'"]'
-            ).last();
+
+            // find start cell
+            start_cell = $(this)
+            temp = start_cell.prevUntil('.shift_cell[work_location_id!="'+work_location_id+'"]')
+            if (!temp.length == 0) {
+                if (temp.last().hasClass('most-left-cell')) {
+                    start_cell = temp.last().next().next();
+                } else {
+                    start_cell = temp.last();
+                }
+            }
+
+            // find finish cell
+            finish_cell = $(this)
+            temp = finish_cell.nextUntil('.shift_cell[work_location_id!="'+work_location_id+'"]')
+            if (!temp.length == 0) {
+                finish_cell = temp.last();
+            }
 
             // create time str
             var start_at = new Date(start_cell.attr('value'));
@@ -225,25 +242,30 @@ $(document).on('click', 'td.shift_cell', function() {
             elm.find('h5').append('form ' + date_to_string(start_at) + ' to ' + date_to_string(finish_at));
             elm.find('select').val(work_location_id);
             elm.find('.work-location-color').css('color', elm.find('option:selected').attr('color'));
+        } else {
+            // show new detail card
+            var datetime = new Date($(this).attr('value'));
 
-            return;
+            elm = $(".shift_detail").clone(true).appendTo(this);
+            $(this).find('.start-at').attr('value', datetime);
+
+            datetime = date_to_string(datetime);
+            $(this).find('.start-at').text(datetime);
+            elm.find('h5').append(datetime);
+            
+            work_location_id = elm.find('.work-location').find('option:selected').val();
+            paint_out_cell(work_location_id);
+            calculate_total_hour($(this).closest('tr'));
+            
+            // disable select and break button
+            elm.find('.break').prop('disabled', true);
+            $(".most-left-cell>select").prop('disabled', true);
+        }
+        // if card located right side of screen, add right:0px
+        if (elm.offset().left > $(window).width() / 2) {
+            elm.css('right', '0px');
         }
 
-        // show new detail card
-        var datetime = new Date($(this).attr('value'));
-
-        elm = $(".shift_detail").clone(true).appendTo(this);
-        $(this).find('.start-at').attr('value', datetime);
-
-        datetime = date_to_string(datetime);
-        $(this).find('.start-at').text(datetime);
-        elm.find('h5').append(datetime);
-        
-        paint_out_cell();
-        
-        // disable select and break button
-        elm.find('.break').prop('disabled', true);
-        $(".most-left-cell>select").prop('disabled', true);
         return;
     }
 
