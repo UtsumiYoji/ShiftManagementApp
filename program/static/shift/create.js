@@ -102,6 +102,11 @@ $(document).on('change', '.most-left-cell>select' , function() {
     // judge user doesn't exit
     var selected_user_id = $(this).val()
     let count = 0;
+
+    if (selected_user_id == '') {
+        return
+    }
+
     $(this).closest('tbody').find('.user').each(function() {
         if ($(this).val() == selected_user_id) {
             count += 1;
@@ -372,4 +377,89 @@ $(document).on('click', '.delete', function() {
     calculate_total_hour($(this).closest('tr'));
     $(this).closest('.shift_detail').remove();
     $(".most-left-cell>select").prop('disabled', false);
+});
+
+// submit form
+$(document).on('click', '.submit', function() {
+    var data = [];
+
+    $('.shift tr').each(function() {
+        // check if it has user
+        if ($(this).find('.user').val() == '') {
+            return true;
+        }
+
+        // get user id
+        var user_id = $(this).find('.user').val();
+
+        // get td elements which has work_location_id
+        cells = $(this).find('td[work_location_id!=""]').slice(2);
+        work_location_id = cells.eq(0).attr('work_location_id');
+        start_at = cells.eq(0).attr('value');
+        var breaks = [];
+
+        if (cells.eq(0).css('background-color') == 'rgb(255, 255, 0)') {
+            breaks.push(formatDate(new Date(cells.eq(0).attr('value'))));
+        }
+
+        for (var i = 1; i < cells.length; i++) {
+            cell = cells.eq(i);
+            
+            // if it is break time
+            if (cell.css('background-color') == 'rgb(255, 255, 0)') {
+                breaks.push(formatDate(new Date(cell.attr('value'))));
+            }
+
+            // it is end of row
+            if (i == cells.length - 1) {
+                finish_at = new Date(cells.eq(i).attr('value'));
+                finish_at.setMinutes(finish_at.getMinutes() + 30);
+                data.push({
+                    'user_id': user_id,
+                    'work_location_id': work_location_id,
+                    'start_at': formatDate(new Date(start_at)),
+                    'finish_at': formatDate(finish_at),
+                    'break_time': breaks
+                });
+            } else if (cell.attr('work_location_id') != work_location_id) {
+                // If work_location_id is changed, push data
+                // use current time as a finish time because it has to be added 30 minutes
+                finish_at = cell.attr('value')
+                data.push({
+                    'user_id': user_id,
+                    'work_location_id': work_location_id,
+                    'start_at': formatDate(new Date(start_at)),
+                    'finish_at': formatDate(new Date(finish_at)),
+                    'break_time': breaks
+                });
+
+                // Go to next work_location_id
+                work_location_id = cell.attr('work_location_id');
+                start_at = cell.attr('value');
+                var breaks = [];
+            }
+        }
+    });
+
+    if (data.length == 0) {
+        alert('There is no data to save.');
+        return;
+    }
+
+    $.ajax({
+        url: '/shift/create',
+        type: 'POST',
+        headers: {
+            'X-CSRFToken': csrf_token
+        },
+        data: {
+            'data': JSON.stringify(data)
+        },
+        success: function(response) {
+            window.location.href = response.url;
+        },
+        error: function(xhr, status, error) {
+            alert('Error');
+        }
+    });
 });

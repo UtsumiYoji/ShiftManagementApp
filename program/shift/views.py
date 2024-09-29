@@ -1,4 +1,8 @@
+import json
+from datetime import datetime
+
 from django.views import generic
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.forms import formset_factory
 
@@ -11,25 +15,7 @@ class TopPageView(generic.TemplateView):
 
 class CreateView(generic.edit.BaseFormView, generic.TemplateView):
     template_name = 'shift/create.html'
-    success_url = reverse_lazy('')
-
-    def make_formset(self, form, request_post_data=None):
-        if request_post_data is None:
-            result = formset_factory(
-                form=form,
-                extra=1,
-                max_num=2,
-            )
-        else:
-            result = formset_factory(
-                form=form,
-                extra=1,
-                max_num=(request_post_data) # need to be updated
-            )(
-                request_post_data
-                )
-
-        return result
+    success_url = reverse_lazy('shift:top_page')
 
     def get_context_data(self, **kwargs):
         result = kwargs
@@ -39,16 +25,6 @@ class CreateView(generic.edit.BaseFormView, generic.TemplateView):
         result['work_locations'] = models.WorkLocation.objects.filter(
             disabled=False
         )
-
-        if 'user_shift_formset' not in kwargs:
-            kwargs['user_shift_formset'] = self.make_formset(
-                forms.UserShiftForm
-                )
-            
-        if 'break_time_form' not in kwargs:
-            kwargs['break_time_form'] = self.make_formset(
-                forms.BreakTimeForm
-                )
         
         return result
 
@@ -56,19 +32,55 @@ class CreateView(generic.edit.BaseFormView, generic.TemplateView):
         return self.render_to_response(self.get_context_data())
     
     def post(self, request, *args, **kwargs):
-        user_shift_formset = self.make_formset(
-            forms.UserShiftForm, request.POST)
+        data = json.loads(request.POST['data'])
         
-        break_time_formset = self.make_formset(
-            forms.BreakTimeForm, request.POST)
+        user_shift_data = {
+            'form-TOTAL_FORMS': len(data),
+            'form-INITIAL_FORMS': 0,
+        }
+        break_time_data = {
+            'form-INITIAL_FORMS': 0,
+        }
 
-        if (user_shift_formset.is_valid() and break_time_formset.is_valid()):
-            user_shift_formset.save()
-            break_time_formset.save()
-            return self.form_valid(user_shift_formset)
+        for i, d in enumerate(data):
+            user_object = user_models.User.objects.get(id=d['user_id'])
+            if d['work_location_id'] == '0':
+                work_location_object = None
+            else:
+                work_location_object = models.WorkLocation.objects.get(id=d['work_location_id'])
+            
+            user_shift_data['form-'+str(i)+'-user_object'] = user_object
+            user_shift_data['form-'+str(i)+'-work_location_object'] = work_location_object
+            user_shift_data['form-'+str(i)+'-start_at'] = datetime.strptime(d['start_at'], '%Y-%m-%d %H:%M')
+            user_shift_data['form-'+str(i)+'-finish_at'] = datetime.strptime(d['finish_at'], '%Y-%m-%d %H:%M')
+
+            for b in d['break_time']:
+                break_time_data['form-'+str(len(break_time_data)-1)+'-start_at'] = datetime.strptime(b, '%Y-%m-%d %H:%M')
+
+        user_shift_formset = formset_factory(
+            form=forms.UserShiftForm,
+            max_num=len(user_shift_data)
+        )(user_shift_data)
+
+        break_time_data['form-TOTAL_FORMS'] = len(break_time_data) - 1
+        break_time_formset = formset_factory(
+            form=forms.BreakTimeForm,
+            max_num=len(break_time_data)
+        )(break_time_data)
+
+        if user_shift_formset.is_valid() and break_time_formset.is_valid():
+            # Save user_shift_formset
+            user_shift_objects = [form.save() for form in user_shift_formset]
+
+            break_form_index = 0
+            for i, break_count in enumerate([len(d['break_time']) for d in data]):
+                user_shift_object = user_shift_objects[i]
+                for _ in range(break_count):
+                    break_time_formset.forms[break_form_index].instance.user_shift_object = user_shift_object
+                    break_form_index += 1
+                    
+            [form.save() for form in break_time_formset]
+
+            return JsonResponse({'url': self.success_url})
         else:
-            return self.render_to_response(
-                self.get_context_data(
-                    user_shift_formset=user_shift_formset, 
-                    break_time_form=break_time_formset
-                    ))
+            return JsonResponse({'status': 'error'})

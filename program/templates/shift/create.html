@@ -33,6 +33,8 @@
         </div>
         <hr class="mb-5">
     </div>
+
+    <button class="btn btn-primary submit">Submit</button>
 </div>
 
 <div class="d-none">
@@ -109,6 +111,7 @@
 {% comment %} My js {% endcomment %}
 <script>
     $('.datetimepicker').datetimepicker();
+    const csrf_token = '{{ csrf_token|safe }}';
     const users = {{ users|safe }};
 </script>
 <script src="{% static 'shift/create.js' %}"></script>

@@ -1,7 +1,5 @@
-from django.http import HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse_lazy
-from django.forms import formset_factory
 from django_filters import FilterSet, filters
 
 from . import models, forms
