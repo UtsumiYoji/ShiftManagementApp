@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}{{ block.super }} | Work locations{% endblock title %}
+
+{% block contents %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+<link rel="stylesheet" type='text/css' href="{% static 'shift/private_list.css'%}">
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Shift</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-5">Your shift</h1>
+
+    <div class="controller">
+        <button class="today btn btn-light">Today</button>
+        <span class="previous-week material-symbols-outlined">chevron_left</span>
+        <span class="next-week material-symbols-outlined">chevron_right</span>
+    </div>
+
+    <div class="d-flex">
+        <table class="calendar-label">
+            <thead>
+                <tr><th></th></tr>
+            </thead>
+            <tbody>
+                <tr class="blank"></tr>
+                {% with ''|center:24 as range %}
+                {% for _ in range %}
+                    <tr>
+                        <td>{{ forloop.counter }}:00</td>
+                    </tr>
+                {% endfor %}
+                {% endwith %}
+            </tbody>
+        </table>
+
+        <table class="table calendar">
+            <thead>
+                <tr>
+                    <th class="day1"><p>Month date</p>Sun</th>
+                    <th class="day2"><p>Month date</p>Mon</th>
+                    <th class="day3"><p>Month date</p>Tue</th>
+                    <th class="day4"><p>Month date</p>Wed</th>
+                    <th class="day5"><p>Month date</p>Thu</th>
+                    <th class="day6"><p>Month date</p>Fri</th>
+                    <th class="day7"><p>Month date</p>Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% with ''|center:24 as range %}
+                {% for _ in range %}
+                    <tr>
+                        <td class="day1-{{ forloop.counter }}"></td>
+                        <td class="day2-{{ forloop.counter }}"></td>
+                        <td class="day3-{{ forloop.counter }}"></td>
+                        <td class="day4-{{ forloop.counter }}"></td>
+                        <td class="day5-{{ forloop.counter }}"></td>
+                        <td class="day6-{{ forloop.counter }}"></td>
+                        <td class="day7-{{ forloop.counter }}"></td>
+                    </tr>
+                {% endfor %}
+                {% endwith %}
+            </tbody>
+        </table>
+    </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" integrity="sha512-bYPO5jmStZ9WI2602V2zaivdAnbAhtfzmxnEGh9RwtlI00I9s8ulGe4oBa5XxiC6tCITJH/QG70jswBhbLkxPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    shifts = [
+        {% for object in object_list %}
+            {
+                id: {{ object.id }},
+                work_location_object: "{{ object.work_location_object }}",
+                color: "{{ object.work_location_object.color }}",
+                start_at: "{{ object.start_at }}",
+                finish_at: "{{ object.finish_at }}",
+                breaks : [
+                    {% for break_time in object.breaktime_set.all %}
+                        {
+                            start_at: "{{ break_time.start_at|date:"Y-m-d\\TH:i:s" }}",
+                        },
+                    {% endfor %}
+                ]
+            },
+        {% endfor %}
+    ]
+
+    $('.form-control').datetimepicker({
+        i18n:{
+            de:{
+            months:[
+                'Januar','Februar','März','April',
+                'Mai','Juni','Juli','August',
+                'September','Oktober','November','Dezember',
+            ],
+            dayOfWeek:[
+                "So.", "Mo", "Di", "Mi",
+                "Do", "Fr", "Sa.",
+            ]
+            }
+        },
+        timepicker:false,
+        format:'Y-m-d',
+        });
+</script>
+<script src="{% static 'shift/private_list.js' %}"></script>
+{% endblock %}

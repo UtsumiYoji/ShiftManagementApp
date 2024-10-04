@@ -1,0 +1,109 @@
+.controller {
+    display: flex;
+    align-items: center;
+
+    button {
+        width: 100px;
+    }
+
+    .material-symbols-outlined {
+        font-size: 30px;
+        cursor: pointer;
+    }
+}
+
+.d-flex {
+    align-items: flex-start;
+}
+
+.calendar-label, .calendar{
+    thead {
+        position: sticky;
+        top: 72px;
+        height: 65px;
+        z-index: 1;
+        background-color: white;
+    }
+
+    tr {
+        height: 60px;
+    }
+}
+
+.calendar-label {
+    .blank {
+        height: 28px;
+    }
+
+    td {
+        width: 30px;
+        height: 60px;
+        font-size: 14px;
+        text-align: right;
+        padding: 0;
+        padding-right: 2px;
+    }
+}
+
+.calendar {
+    th, td{
+        border-right: solid 1px lightgray;
+        height: 60px !important;
+    }
+
+    thead {
+        box-shadow: 0 2px 0 0 black;
+
+        th {
+            text-align: center;
+            p {
+                padding: 0;
+                margin: 0;
+            }
+        }
+
+        .today {
+            background-color: lightblue;
+        }
+
+        .day7 {
+            border-right: none;
+        }
+    }
+
+    tbody {
+        td {
+            width: calc(100% / 7);
+            padding: 0;
+
+            div {
+                width: 90%;
+            }
+
+            .work {
+                color: white;
+                height: 100%;
+                background-color: lightgray;
+
+                p {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .break {
+                    background-color: yellow;
+                    height: 50%;
+                    width: 100%;
+                }
+            }
+
+            .half {
+                height: 50%;
+            }
+        }
+        
+        td:nth-child(7) {
+            border-right: none;
+        }
+    }
+}

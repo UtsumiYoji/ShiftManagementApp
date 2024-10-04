@@ -14,5 +14,13 @@
             "name": "User information",
             "url": "/management/users/"
         }
+    },
+    {
+        "model": "management.restrictedpage",
+        "pk": 3,
+        "fields": {
+            "name": "Shift creation",
+            "url": "/shift/create/"
+        }
     }
 ]

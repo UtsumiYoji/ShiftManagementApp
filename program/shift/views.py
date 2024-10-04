@@ -5,17 +5,46 @@ from django.views import generic
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.forms import formset_factory
+from django_filters import FilterSet
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from . import models, forms
 from user import models as user_models
-
-class TopPageView(generic.TemplateView):
-    template_name = 'common/top_page.html'
+from common.views import CheckAccessAuthorization
 
 
-class CreateView(generic.edit.BaseFormView, generic.TemplateView):
+
+class UserShiftFilter(FilterSet):
+    class Meta:
+        model = models.UserShift
+        fields = {
+            'start_at': ['gte'],
+        }
+
+
+class PrivateListView(generic.ListView, LoginRequiredMixin):
+    model = models.UserShift
+    template_name = 'shift/private_list.html'
+
+    def get_queryset(self):
+        queryset = models.UserShift.objects.filter(
+            user_object_id=self.request.user.id,
+            )
+        queryset = UserShiftFilter(self.request.GET, queryset).qs
+
+        # formatting datetime
+        for query in queryset:
+            for key, value in query.__dict__.items():
+                if key in ['start_at', 'finish_at']:
+                    setattr(query, key, value.strftime('%Y-%m-%dT%H:%M:%S'))
+
+        return queryset
+
+
+class CreateView(CheckAccessAuthorization, generic.edit.BaseFormView, generic.TemplateView):
     template_name = 'shift/create.html'
-    success_url = reverse_lazy('shift:top_page')
+    success_url = reverse_lazy('shift:private_list')
+    restricted_page_url = reverse_lazy('shift:create')
 
     def get_context_data(self, **kwargs):
         result = kwargs
