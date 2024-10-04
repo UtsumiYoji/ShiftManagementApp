@@ -1,6 +1,6 @@
 # Shift management web app for restaurants
 
-Japanese version README is also available
+Japanese version README is also available.  
 [日本語版README]()も利用可能です。
 
 ## Purpose
