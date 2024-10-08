@@ -1,9 +1,11 @@
-from django.views import generic
+from datetime import datetime
 from django.urls import reverse_lazy
+from django.views import generic
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from management import models as management_models
+from shift import models as shift_models
 
 # Create your views here.
 # Base from
@@ -49,5 +51,20 @@ class CheckAccessAuthorization(LoginRequiredMixin):
         return redirect(f'{self.redirect_to}?access=denied')
 
 
-class TopPageView(generic.TemplateView):
+class TopPageView(generic.ListView):
+    model = shift_models.UserShift
     template_name = 'common/top_page.html'
+
+    def get_queryset(self):
+        
+        queryset = shift_models.UserShift.objects.filter(
+            user_object_id=self.request.user.id,
+            start_at__gte=datetime.today()
+        ).order_by('start_at')[:7]
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context

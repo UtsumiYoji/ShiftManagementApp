@@ -26,23 +26,22 @@
 <body>
     <header class="p-3 border-bottom">
         <div class="container">
-            <div class="d-flex align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-                    <img src="{% static 'base/images/clock.png'%}" height="32">
-                </a>
+            <div class="row">
+                <div class="col-1">
+                    <a href="/" class="d-flex align-items-center">
+                        <img src="{% static 'base/images/clock.png'%}" height="32">
+                    </a>
+                </div>
 
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
-                    <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
-                    <li><a href="#" class="nav-link px-2 link-dark">Customers</a></li>
-                    <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
-                </ul>
+                <div class="col-10">
+                    <a href="{% url 'shift:private_list' %}" class="link-dark text-decoration-none">Calendar</a>
+                </div>
 
-                <div class="dropdown">
-                    <a href="#" class="d-block link-dark text-decoration-none" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="dropdown col-1">
+                    <a href="#" class="link-dark text-decoration-none" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="material-symbols-outlined" style="font-size:32px">account_circle</span>
                     </a>
-                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                    <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1">
                     {% if request.user.is_authenticated %}
                         <li><a class="dropdown-item" href="{% url 'user:user' %}">Profile</a></li>
                         <li><hr class="dropdown-divider"></li>

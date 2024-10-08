@@ -1,5 +1,4 @@
 from django.db import models
-from colorfield.fields import ColorField
 
 
 # Create your models here.

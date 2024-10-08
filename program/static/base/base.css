@@ -10,10 +10,20 @@ header{
     background-color: white;
     z-index: 10;
 
-    .dropdown {
+    .col-10 {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
         a {
-            height: 32px;
+            width: 100px;
         }
+    }
+
+    .dropdown>a:nth-child(1) {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 
     .dropdown form {

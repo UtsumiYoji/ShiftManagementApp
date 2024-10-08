@@ -13,7 +13,6 @@ from user import models as user_models
 from common.views import CheckAccessAuthorization
 
 
-
 class UserShiftFilter(FilterSet):
     class Meta:
         model = models.UserShift
@@ -22,7 +21,7 @@ class UserShiftFilter(FilterSet):
         }
 
 
-class PrivateListView(generic.ListView, LoginRequiredMixin):
+class PrivateListView(LoginRequiredMixin, generic.ListView):
     model = models.UserShift
     template_name = 'shift/private_list.html'
 

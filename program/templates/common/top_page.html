@@ -1,16 +1,66 @@
 {% extends 'base.html' %}
-{% block title %}{{ block.super }} | Sing-Up{% endblock title %}
+{% block title %}{{ block.super }} | Work locations{% endblock title %}
 
 {% block contents %}
 
 {% load static %}
 {% load django_bootstrap5 %}
 
-<wrap>
-    <div>
-        <h1>Top page</h1>
-    </div>
-    This is Top page
-</wrap>
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Home</li>
+        </ol>
+    </nav>
 
+    <h1 class="mb-5">Top page</h1>
+
+    <div class="row">
+        <div class="col-8">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Your upcoming shift</h5>
+                        <ul>
+                            {% for object in object_list %}
+                                <li>{{ object.start_at|date:"Md H:i" }} - {{ object.finish_at|date:"Md H:i" }} {{ object.work_location_object.name }}</li>
+                            {% empty %}
+                                <li>There is no shift yet</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'shift:private_list' %}" class="card-link">Go to calendar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">To-do list</h5>
+                        <ul>
+                        {% if request.user.bank_information == None %}
+                            <li>Bank information is not registered yet > 
+                            <a href="{% url 'user:bank_information' %}" class="card-link">here</a>
+                            </li>
+                        {% endif %}
+                        {% if request.user.bank_information == None %}
+                            <li>Address is not registered yet > 
+                            <a href="{% url 'user:address' %}" class="card-link">here</a>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Message center</h5>
+                    TBD
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
