@@ -393,16 +393,18 @@ $(document).on('click', '.submit', function() {
         var user_id = $(this).find('.user').val();
 
         // get td elements which has work_location_id
-        cells = $(this).find('td[work_location_id!=""]').slice(2);
-        work_location_id = cells.eq(0).attr('work_location_id');
-        start_at = cells.eq(0).attr('value');
+        cells = $(this).find('.shift_cell');
+        i = cells.index(cells.filter('td[work_location_id!=""]').first())
+        work_location_id = cells.eq(i).attr('work_location_id');
+        start_at = cells.eq(i).attr('value');
         var breaks = [];
 
-        if (cells.eq(0).css('background-color') == 'rgb(255, 255, 0)') {
+        if (cells.eq(i).css('background-color') == 'rgb(255, 255, 0)') {
             breaks.push(formatDate(new Date(cells.eq(0).attr('value'))));
         }
 
-        for (var i = 1; i < cells.length; i++) {
+        i += 1;
+        for (i; i < cells.length; i++) {
             cell = cells.eq(i);
             
             // if it is break time
@@ -424,16 +426,24 @@ $(document).on('click', '.submit', function() {
             } else if (cell.attr('work_location_id') != work_location_id) {
                 // If work_location_id is changed, push data
                 // use current time as a finish time because it has to be added 30 minutes
-                finish_at = cell.attr('value')
+                finish_at = new Date(cells.eq(i-1).attr('value'))
+                finish_at.setMinutes(finish_at.getMinutes() + 30);
                 data.push({
                     'user_id': user_id,
                     'work_location_id': work_location_id,
                     'start_at': formatDate(new Date(start_at)),
-                    'finish_at': formatDate(new Date(finish_at)),
+                    'finish_at': formatDate(finish_at),
                     'break_time': breaks
                 });
 
                 // Go to next work_location_id
+                temp = cells.slice(i).filter('td[work_location_id!=""]')
+                if (temp.length == 0) {
+                    break;
+                }
+
+                i = cells.index(temp.first());
+                cell = cells.eq(i);
                 work_location_id = cell.attr('work_location_id');
                 start_at = cell.attr('value');
                 var breaks = [];
