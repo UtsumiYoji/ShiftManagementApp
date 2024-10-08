@@ -106,7 +106,7 @@ $(document).ready(function() {
         }
         $('.day'+column+'-'+time+'>.work').css('background-color', shift.color)
 
-        // if 30min work donot add work time
+        // if 30min work do not add work time
         if (!(finish_at.getHours() == start_at.getHours())) {
             $('.day'+column+'-'+time+'>.work').append(
                 '<p>'+shift.work_location_object+'</p>' +
@@ -115,7 +115,17 @@ $(document).ready(function() {
         }
 
         // adding work class until find finish time
+        console.log(time)
         while (true) {
+            if (finish_at.getHours() == time) {
+                if (finish_at.getMinutes() == 30) {
+                    time += 1;
+                    $('.day'+column+'-'+time).append('<div class="work half"></div>')
+                    $('.day'+column+'-'+time+'>.work').css('background-color', shift.color)
+                }
+                break;
+            } 
+
             time += 1;
             if (time > 24) {
                 time = 1;
@@ -126,15 +136,7 @@ $(document).ready(function() {
             }
 
             $('.day'+column+'-'+time).append('<div class="work"></div>')
-            $('.day'+column+'-'+time+'>.work').css('background-color', shift.color)
-            if (finish_at.getHours() == time) {
-                if (finish_at.getMinutes() == 30) {
-                    time += 1;
-                    $('.day'+column+'-'+time).append('<div class="work half"></div>')
-                    $('.day'+column+'-'+time+'>.work').css('background-color', shift.color)
-                }
-                break;
-            } 
+            $('.day'+column+'-'+time+'>.work').css('background-color', shift.color) 
         }
 
         // add break time
@@ -151,7 +153,6 @@ $(document).ready(function() {
                 $(td_path).append('<div class="half"></div>')
             }
             $(td_path).append('<div class="break"></div>')
-            console.log(td_path)
         });
     });
 });
