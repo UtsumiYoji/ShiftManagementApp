@@ -15,6 +15,7 @@
 
     <h1 class="mb-5">Top page</h1>
 
+    {% if request.user.is_authenticated %}
     <div class="row">
         <div class="col-8">
         <div class="container">
@@ -58,9 +59,16 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Message center</h5>
-                    TBD
+                    <p>TBD</p>
+                </div>
             </div>
         </div>
     </div>
+    {% else %}
+        Welcome to shift management system. Please 
+        <a href="{% url 'user:log-in' %}">log-in</a> 
+        or 
+        <a href="{% url 'user:sign-up' %}">sign-up.</a>
+    {% endif %}
 </div>
 {% endblock %}
