@@ -19,7 +19,7 @@
 .calendar-label, .calendar{
     thead {
         position: sticky;
-        top: 72px;
+        top: 64px;
         height: 65px;
         z-index: 1;
         background-color: white;
