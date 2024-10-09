@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load django_bootstrap5 %}
+{% load check_access_authorization %}
 
 <html lang="ja">
 
@@ -35,6 +36,11 @@
 
                 <div class="col-10">
                     <a href="{% url 'shift:private_list' %}" class="link-dark text-decoration-none">Calendar</a>
+                    {% url 'shift:create' as shift_create_url %}
+                    {% check shift_create_url as result %}
+                    {% if result %}
+                        <a href="{% url 'shift:private_list' %}" class="link-dark text-decoration-none">create shift</a>
+                    {% endif %}
                 </div>
 
                 <div class="dropdown col-1">
