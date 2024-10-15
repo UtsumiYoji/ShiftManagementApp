@@ -17,6 +17,7 @@
     - [Setup gunicorn](#setup-gunicorn)
     - [Setup nginx](#setup-nginx)
     - [Run server with gunicorn](#run-server-with-gunicorn)
+    - [Note](#note)
   - [Setup SSL(Https)](#setup-sslhttps)
   - [Document history](#document-history)
 
@@ -281,7 +282,15 @@ $ sudo systemctl restart gunicorn
 
 On your web browser
 - Access this url
-  http://Your public IPv4 address`
+  `http://Your public IPv4 address`
+
+### Note
+
+- **Elastic IP**
+If you stop running Instance, Public IPv4 address will be changed. To avoid it, You can use Elastic IP. it might charge money to you.
+
+- **Test data**
+When you run `migrate.sh`. test data will be loaded, it include admin user with simple password. Id you want not to do, delete `python3 ./manage.py loaddata fixture.json`.
 
 
 ## Setup SSL(Https)
