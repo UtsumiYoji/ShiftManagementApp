@@ -99,17 +99,10 @@ CREATE USER django WITH PASSWORD 'password';
 ALTER ROLE django SET client_encoding TO 'utf8';
 ALTER ROLE django SET default_transaction_isolation TO 'read committed';
 ALTER ROLE django SET timezone TO 'UTC-8';
+ALTER SCHEMA public OWNER TO django;
 GRANT ALL PRIVILEGES ON DATABASE djangodb TO django;
 \q
 ```
-
-<div style="display:none;">
-have to add about `permission denied for schema public`.  
-maybe 
-```
-ALTER SCHEMA public OWNER TO your_database_user;
-```
-</div>
 
 ### Make SSH key in AWS
 
