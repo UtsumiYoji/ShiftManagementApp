@@ -1,7 +1,7 @@
 # 飲食店向けシフト管理ウェブアプリ
 
 英語版のREADMEも利用可能です。  
-[English version README]() is also available
+[English version README](./README.md) is also available
 
 ## 目的
 
@@ -20,7 +20,7 @@
 ### 開発環境/ライブラリ
 
 このアプリケーションはAWS上で、動作させることが可能です  
-セットアップの方法は別ドキュメント[AWS Setup (English only)]()で確認できます
+セットアップの方法は別ドキュメント[AWS Setup (English only)](./documents/AWS%20Setup/README.md)で確認できます
 
 #### 開発環境
 
@@ -48,6 +48,8 @@ pip ライブラリ
 | soupsieve            | 2.6 |
 | sqlparse             | 0.5.1 |
 | tzdata               | 2024.1 |
+| gunicorn             | 23.0.0 |
+| psycopg2             | 2.9.9 |
 
 その他ライブラリ
 | ライブラリ名 | バージョン |
@@ -65,3 +67,4 @@ Google Chrome Version 129.0.6668.90 (Official Build) (64-bit)
 | 更新日時 | 更新者 | 更新内容 |
 | - | - | - |
 | 2024-10-04 | 内海 陽慈 | 初版作成 |
+| 2024-10-15 | 内海 陽慈 | Pip ライブラリを追加 |

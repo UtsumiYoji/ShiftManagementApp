@@ -1,7 +1,7 @@
 # Shift management web app for restaurants
 
 Japanese version README is also available.  
-[日本語版README]()も利用可能です。
+[日本語版README](./README-JP.md)も利用可能です。
 
 ## Purpose
 
@@ -19,7 +19,7 @@ You can find detail feature in [Requirements definition document]().
 
 ### Development environment/Libraries
 
-This app can be worked with AWS. You can find how to set up with another document [AWS Setup]().
+This app can be worked with AWS. You can find how to set up with another document [AWS Setup](./documents/AWS%20Setup/README.md).
 
 #### Development environment
 
@@ -47,6 +47,8 @@ pip libraries
 | soupsieve            | 2.6 |
 | sqlparse             | 0.5.1 |
 | tzdata               | 2024.1 |
+| gunicorn             | 23.0.0 |
+| psycopg2             | 2.9.9 |
 
 Other libraries
 | Library | Version |
@@ -64,4 +66,4 @@ Google Chrome Version 129.0.6668.90 (Official Build) (64-bit)
 | Date | Author | Update |
 | - | - | - |
 | 2024-10-04 | Yoji Utsumi | First issue |
-
+| 2024-10-15 | Yoji Utsumi | Add pip libraries |
