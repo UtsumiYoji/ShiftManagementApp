@@ -30,9 +30,10 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 
 if DEBUG:
-    ALLOWED_HOSTS = []
-else:
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+else:
+    ALLOWED_HOSTS = []
+    
 
 
 # Application definition
