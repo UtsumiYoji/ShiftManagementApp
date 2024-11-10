@@ -13,7 +13,7 @@ Input formats like bank info, address are following Canada basic because this ap
 This app has few feature which are access authorizations, work location management, and shift management.  
 Either manager or owner can set up access restriction depending on user or position. If you are having 2 or more restaurants, You can use work location function. This function could be helpful when you want to define position within one restaurant.  
 Each user can submit their shift request and check their shift once manager allocate you.  
-You can find detail feature in [Requirements definition document]().
+You can find detail feature in [Requirements definition document](./documents/RDD/Requirements%20definition%20document.md).
 
 ## Environment
 

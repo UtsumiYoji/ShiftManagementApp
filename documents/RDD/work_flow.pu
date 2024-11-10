@@ -1,0 +1,28 @@
+@startuml
+
+|Employee|
+start
+:Create new account;
+:Provide personal information\ne.g. Bank infor, Address;
+
+|Manager|
+:Set working conditions\ne.g. Wage, employment type;
+:Create worklocation;
+
+|Employee|
+:Submit preferred shifts;
+
+|System|
+:Send notification to manager;
+
+|Manager|
+:Create shifts;
+
+|System|
+:Send notification to employee;
+
+|Employee|
+:Be able to view own shifts;
+
+end
+@enduml
