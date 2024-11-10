@@ -1,5 +1,5 @@
-from datetime import datetime
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import generic
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -56,10 +56,12 @@ class TopPageView(generic.ListView):
     template_name = 'common/top_page.html'
 
     def get_queryset(self):
-        
+        today =timezone.datetime.today()
+        start_at = timezone.datetime(today.year, today.month, today.day, 0, 0, 0)
+        start_at = timezone.make_aware(start_at)
         queryset = shift_models.UserShift.objects.filter(
             user_object_id=self.request.user.id,
-            start_at__gte=datetime.today()
+            start_at__gte=start_at,
         ).order_by('start_at')[:7]
 
         return queryset

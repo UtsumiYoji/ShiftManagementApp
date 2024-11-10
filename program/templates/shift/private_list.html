@@ -80,8 +80,8 @@
                 id: {{ object.id }},
                 work_location_object: "{{ object.work_location_object }}",
                 color: "{{ object.work_location_object.color }}",
-                start_at: "{{ object.start_at }}",
-                finish_at: "{{ object.finish_at }}",
+                start_at: "{{ object.start_at|date:"Y-m-d\\TH:i:s" }}",
+                finish_at: "{{ object.finish_at|date:"Y-m-d\\TH:i:s" }}",
                 breaks : [
                     {% for break_time in object.breaktime_set.all %}
                         {

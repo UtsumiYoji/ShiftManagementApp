@@ -31,12 +31,6 @@ class PrivateListView(LoginRequiredMixin, generic.ListView):
             )
         queryset = UserShiftFilter(self.request.GET, queryset).qs
 
-        # formatting datetime
-        for query in queryset:
-            for key, value in query.__dict__.items():
-                if key in ['start_at', 'finish_at']:
-                    setattr(query, key, value.strftime('%Y-%m-%dT%H:%M:%S'))
-
         return queryset
 
 

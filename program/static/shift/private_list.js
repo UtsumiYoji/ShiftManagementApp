@@ -99,23 +99,28 @@ $(document).ready(function() {
 
         // add start work class
         if (start_at.getMinutes() == 30) {
-            $('.day'+column+'-'+time).append('<div class="half"></div>')
+            if (!($('.day'+column+'-'+time+'>*').hasClass('half'))) {
+                $('.day'+column+'-'+time).append('<div class="half"></div>')
+            }
             $('.day'+column+'-'+time).append('<div class="work half"></div>')
         } else {
             $('.day'+column+'-'+time).append('<div class="work"></div>')
         }
-        $('.day'+column+'-'+time+'>.work').css('background-color', shift.color)
+        $('.day'+column+'-'+time+'>.work:last-child').css('background-color', shift.color)
 
         // if 30min work do not add work time
-        if (!(finish_at.getHours() == start_at.getHours())) {
-            $('.day'+column+'-'+time+'>.work').append(
+        if (finish_at.getHours() == start_at.getHours()) {
+            $('.day'+column+'-'+time+'>.work:last-child').append(
+                shift.work_location_object
+            )
+        } else {
+            $('.day'+column+'-'+time+'>.work:last-child').append(
                 '<p>'+shift.work_location_object+'</p>' +
                 time_to_string(start_at) + ' - ' + time_to_string(finish_at)
             )
         }
 
         // adding work class until find finish time
-        console.log(time)
         while (true) {
             if (finish_at.getHours() == time) {
                 if (finish_at.getMinutes() == 30) {

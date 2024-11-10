@@ -39,7 +39,7 @@
                     {% url 'shift:create' as shift_create_url %}
                     {% check shift_create_url as result %}
                     {% if result %}
-                        <a href="{% url 'shift:private_list' %}" class="link-dark text-decoration-none">Create shift</a>
+                        <a href="{% url 'shift:create' %}" class="link-dark text-decoration-none">Create shift</a>
                     {% endif %}
 
                     {% url 'management:top_page' as management_url %}

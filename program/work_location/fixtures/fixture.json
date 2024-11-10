@@ -1,0 +1,50 @@
+[
+    {
+        "model": "work_location.worklocation",
+        "pk": 1,
+        "fields": {
+            "name": "Kitchen",
+            "color": "#ff0000",
+            "place_name": null,
+            "address1": null,
+            "address2": null,
+            "city": null,
+            "postal_code": null,
+            "province": null,
+            "disabled": false,
+            "made_on": "2024-11-10"
+        }
+    },
+    {
+        "model": "work_location.worklocation",
+        "pk": 2,
+        "fields": {
+            "name": "Casher",
+            "color": "#1e00ff",
+            "place_name": null,
+            "address1": null,
+            "address2": null,
+            "city": null,
+            "postal_code": null,
+            "province": null,
+            "disabled": false,
+            "made_on": "2024-11-10"
+        }
+    },
+    {
+        "model": "work_location.worklocation",
+        "pk": 3,
+        "fields": {
+            "name": "Warehouse",
+            "color": "#ff9500",
+            "place_name": null,
+            "address1": null,
+            "address2": null,
+            "city": null,
+            "postal_code": null,
+            "province": null,
+            "disabled": false,
+            "made_on": "2024-11-10"
+        }
+    }
+]
